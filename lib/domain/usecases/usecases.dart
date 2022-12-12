@@ -1,0 +1,1 @@
+export 'load_pokemon_list.dart';
