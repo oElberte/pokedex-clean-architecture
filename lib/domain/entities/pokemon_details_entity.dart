@@ -6,7 +6,7 @@ class PokemonDetailsEntity extends Equatable {
   final int height;
   final int weight;
   final List<Stats> stats;
-  final List<Type> types;
+  final List<Types> types;
 
   const PokemonDetailsEntity({
     required this.id,
