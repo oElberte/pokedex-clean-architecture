@@ -1,9 +1,10 @@
 import '../../domain/entities/entities.dart';
 import '../../domain/helpers/helpers.dart';
+import '../../domain/usecases/load_pokemon_list.dart';
 import '../http/http.dart';
 import '../models/models.dart';
 
-class LoadPokemonListImpl {
+class LoadPokemonListImpl implements LoadPokemonList {
   final String url;
   final HttpClient httpClient;
 
@@ -12,7 +13,8 @@ class LoadPokemonListImpl {
     required this.httpClient,
   });
 
-  Future<PokemonListEntity> loadData() async {
+  @override
+  Future<PokemonListEntity> fetch() async {
     try {
       final json = await httpClient.request(url);
       return PokemonListModel.fromJson(json).toEntity();

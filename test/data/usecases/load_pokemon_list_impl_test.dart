@@ -71,8 +71,8 @@ void main() {
     mockHttpData(mockValidData());
   });
 
-  test('Shoud call HttpClient on loadData', () async {
-    await sut.loadData();
+  test('Shoud call HttpClient on fetch', () async {
+    await sut.fetch();
 
     verify(httpClient.request(url)).called(1);
   });
@@ -80,7 +80,7 @@ void main() {
   test('Should throw BadRequestError if HttpClient returns 400', () async {
     mockHttpError(HttpError.badRequest);
 
-    final future = sut.loadData();
+    final future = sut.fetch();
 
     expect(future, throwsA(DomainError.badRequest));
   });
@@ -88,7 +88,7 @@ void main() {
   test('Should throw UnexpectedError if HttpClient returns 404', () async {
     mockHttpError(HttpError.notFound);
 
-    final future = sut.loadData();
+    final future = sut.fetch();
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -96,7 +96,7 @@ void main() {
   test('Should throw UnexpectedError if HttpClient returns 500', () async {
     mockHttpError(HttpError.serverError);
 
-    final future = sut.loadData();
+    final future = sut.fetch();
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -105,16 +105,16 @@ void main() {
       'Should throw InvalidDataError if HttpClient returns 200 with invalid data',
       () async {
     mockHttpData(mockDataWithoutResults());
-    final future = sut.loadData();
+    final future = sut.fetch();
     expect(future, throwsA(DomainError.invalidData));
 
     mockHttpData(mockDataWithoutNextAndPrevious());
-    final future2 = sut.loadData();
+    final future2 = sut.fetch();
     expect(future2, throwsA(DomainError.invalidData));
   });
 
   test('Should return Pokemon on 200', () async {
-    final result = await sut.loadData();
+    final result = await sut.fetch();
 
     expect(
       result,

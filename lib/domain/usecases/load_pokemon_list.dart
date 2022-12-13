@@ -1,5 +1,5 @@
 import '../entities/entities.dart';
 
 abstract class LoadPokemonList {
-  Future<PokemonListEntity> loadData();
+  Future<PokemonListEntity> fetch();
 }

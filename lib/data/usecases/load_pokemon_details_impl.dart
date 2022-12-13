@@ -1,17 +1,18 @@
-import 'package:pokedex_clean_architecture/data/http/http.dart';
-import 'package:pokedex_clean_architecture/domain/entities/entities.dart';
-
+import '../../domain/entities/entities.dart';
 import '../../domain/helpers/helpers.dart';
+import '../../domain/usecases/load_pokemon_details.dart';
+import '../http/http.dart';
 import '../models/models.dart';
 
-class LoadPokemonDetailsImpl {
+class LoadPokemonDetailsImpl implements LoadPokemonDetails {
   final HttpClient httpClient;
 
   LoadPokemonDetailsImpl({
     required this.httpClient,
   });
 
-  Future<PokemonDetailsEntity> loadData({required String url}) async {
+  @override
+  Future<PokemonDetailsEntity> fetch({required String url}) async {
     try {
       final json = await httpClient.request(url);
       return PokemonDetailsModel.fromJson(json).toEntity();
