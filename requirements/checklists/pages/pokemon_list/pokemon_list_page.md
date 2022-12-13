@@ -1,7 +1,7 @@
 # Pokemon List Page
 
 > ## Rules
-1. Call the List Pokemons method on page load
+1. ✅ Call the List Pokemons method on page load
 2. Display loading when receiving isLoading event from presenter as true
 3. Hide loading when receiving isLoading event from presenter as false
 4. Display error message and hide list when receiving event from pokemonsData with error

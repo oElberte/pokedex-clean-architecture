@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex_clean_architecture/ui/pages/pokemon_list/pokemon_list_presenter.dart';
 
 class PokemonListPage extends StatelessWidget {
-  const PokemonListPage({super.key});
+  final PokemonListPresenter? presenter;
+
+  const PokemonListPage(this.presenter, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Remove '!' when Presenter implementation is done
+    presenter!.loadData();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokédex'),
