@@ -1,4 +1,4 @@
-import 'package:pokedex_clean_architecture/data/http/http.dart';
+import '../http/http.dart';
 
 import '../../domain/entities/entities.dart';
 import 'pokemon_results_model.dart';

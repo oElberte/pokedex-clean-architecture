@@ -1,4 +1,5 @@
 import '../../domain/entities/entities.dart';
+import '../http/http.dart';
 
 class PokemonResultsModel {
   final String name;
@@ -10,6 +11,10 @@ class PokemonResultsModel {
   });
 
   factory PokemonResultsModel.fromJson(Map json) {
+    if (!json.keys.toSet().containsAll(['name', 'url'])) {
+      throw HttpError.invalidData;
+    }
+    
     return PokemonResultsModel(
       name: json['name'],
       url: json['url'],

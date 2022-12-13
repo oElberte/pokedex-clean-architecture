@@ -13,43 +13,20 @@ import 'mocks/http_client.mocks.dart';
 void main() {
   late String url;
   late MockHttpClient httpClient;
-  late LoadPokemonListImpl sut;
+  late LoadPokemonResultsImpl sut;
   late Map pokemonData;
 
-  Map mockDataWithoutResults() => {
-        'count': faker.randomGenerator.integer(1000),
-        'next': faker.internet.httpUrl(),
-        'previous': null,
+  Map mockDataWithoutName() => {
+        'url': faker.internet.httpUrl(),
       };
 
-  Map mockDataWithoutNextAndPrevious() => {
-        'count': faker.randomGenerator.integer(1000),
-        'results': [
-          {
-            'name': faker.animal.name(),
-            'url': faker.internet.httpUrl(),
-          },
-          {
-            'name': faker.animal.name(),
-            'url': faker.internet.httpUrl(),
-          },
-        ],
+  Map mockDataWithoutUrl() => {
+        'name': faker.animal.name(),
       };
 
   Map mockValidData() => {
-        'count': faker.randomGenerator.integer(1000),
-        'next': faker.internet.httpUrl(),
-        'previous': null,
-        'results': [
-          {
-            'name': faker.animal.name(),
-            'url': faker.internet.httpUrl(),
-          },
-          {
-            'name': faker.animal.name(),
-            'url': faker.internet.httpUrl(),
-          },
-        ],
+        'name': faker.animal.name(),
+        'url': faker.internet.httpUrl(),
       };
 
   PostExpectation mockRequest() => when(httpClient.request(any));
@@ -64,7 +41,7 @@ void main() {
   setUp(() {
     url = faker.internet.httpUrl();
     httpClient = MockHttpClient();
-    sut = LoadPokemonListImpl(
+    sut = LoadPokemonResultsImpl(
       url: url,
       httpClient: httpClient,
     );
@@ -104,11 +81,11 @@ void main() {
   test(
       'Should throw InvalidDataError if HttpClient returns 200 with invalid data',
       () async {
-    mockHttpData(mockDataWithoutResults());
+    mockHttpData(mockDataWithoutName());
     final future = sut.loadData();
     expect(future, throwsA(DomainError.invalidData));
 
-    mockHttpData(mockDataWithoutNextAndPrevious());
+    mockHttpData(mockDataWithoutUrl());
     final future2 = sut.loadData();
     expect(future2, throwsA(DomainError.invalidData));
   });
@@ -118,19 +95,9 @@ void main() {
 
     expect(
       result,
-      PokemonListEntity(
-        next: pokemonData['next'],
-        previous: pokemonData['previous'],
-        results: [
-          PokemonResultsEntity(
-            name: pokemonData['results'][0]['name'],
-            url: pokemonData['results'][0]['url'],
-          ),
-          PokemonResultsEntity(
-            name: pokemonData['results'][1]['name'],
-            url: pokemonData['results'][1]['url'],
-          ),
-        ],
+      PokemonResultsEntity(
+        name: pokemonData['name'],
+        url: pokemonData['url'],
       ),
     );
   });
