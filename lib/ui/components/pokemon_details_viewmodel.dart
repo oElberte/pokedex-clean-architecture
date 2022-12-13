@@ -1,9 +1,9 @@
 class PokemonDetailsViewModel {
-  final int id;
+  final String id;
   final String name;
   final String imageUrl;
-  final int height;
-  final int weight;
+  final String height;
+  final String weight;
   final List<StatsViewModel> stats;
   final List<TypesViewModel> types;
 
