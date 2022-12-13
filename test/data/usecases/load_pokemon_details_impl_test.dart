@@ -165,11 +165,11 @@ void main() {
           ),
         ],
         types: [
-          TypesEntity(
-            types: pokemonData['types'][0]['type']['name'],
+          TypeEntity(
+            type: pokemonData['types'][0]['type']['name'],
           ),
-          TypesEntity(
-            types: pokemonData['types'][1]['type']['name'],
+          TypeEntity(
+            type: pokemonData['types'][1]['type']['name'],
           ),
         ],
       ),

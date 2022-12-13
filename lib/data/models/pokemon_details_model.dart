@@ -1,6 +1,5 @@
 import '../../domain/entities/entities.dart';
 import '../http/http.dart';
-import './models.dart';
 
 class PokemonDetailsModel {
   final int id;
@@ -9,7 +8,7 @@ class PokemonDetailsModel {
   final int height;
   final int weight;
   final List<StatsModel> stats;
-  final List<TypesModel> types;
+  final List<TypeModel> types;
 
   const PokemonDetailsModel({
     required this.id,
@@ -36,7 +35,7 @@ class PokemonDetailsModel {
           .map<StatsModel>((answer) => StatsModel.fromJson(answer))
           .toList(),
       types: json['types']
-          .map<TypesModel>((answer) => TypesModel.fromJson(answer))
+          .map<TypeModel>((answer) => TypeModel.fromJson(answer))
           .toList(),
     );
   }
@@ -49,7 +48,51 @@ class PokemonDetailsModel {
       height: height,
       weight: weight,
       stats: stats.map<StatsEntity>((answer) => answer.toEntity()).toList(),
-      types: types.map<TypesEntity>((answer) => answer.toEntity()).toList(),
+      types: types.map<TypeEntity>((answer) => answer.toEntity()).toList(),
+    );
+  }
+}
+
+class StatsModel {
+  final int stat;
+  final String name;
+
+  const StatsModel({
+    required this.stat,
+    required this.name,
+  });
+
+  factory StatsModel.fromJson(Map json) {
+    return StatsModel(
+      stat: json['base_stat'],
+      name: json['stat']['name'],
+    );
+  }
+
+  StatsEntity toEntity() {
+    return StatsEntity(
+      stat: stat,
+      name: name,
+    );
+  }
+}
+
+class TypeModel {
+  final String type;
+
+  const TypeModel({
+    required this.type,
+  });
+
+  factory TypeModel.fromJson(Map json) {
+    return TypeModel(
+      type: json['type']['name'],
+    );
+  }
+
+  TypeEntity toEntity() {
+    return TypeEntity(
+      type: type,
     );
   }
 }
