@@ -1,5 +1,7 @@
+import '../../domain/entities/entities.dart';
 import '../../domain/helpers/helpers.dart';
 import '../http/http.dart';
+import '../models/models.dart';
 
 class LoadPokemonListImpl {
   final String url;
@@ -10,13 +12,19 @@ class LoadPokemonListImpl {
     required this.httpClient,
   });
 
-  Future<void> loadData() async {
+  Future<PokemonListEntity> loadData() async {
     try {
-      await httpClient.request(url);
+      final json = await httpClient.request(url);
+      return PokemonListModel.fromJson(json).toEntity();
     } on HttpError catch (e) {
-      e == HttpError.badRequest
-          ? throw DomainError.badRequest
-          : throw DomainError.unexpected;
+      switch (e) {
+        case HttpError.badRequest:
+          throw DomainError.badRequest;
+        case HttpError.invalidData:
+          throw DomainError.invalidData;
+        default:
+          throw DomainError.unexpected;
+      }
     }
   }
 }
