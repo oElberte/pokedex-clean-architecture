@@ -1,3 +1,4 @@
+import '../../domain/helpers/helpers.dart';
 import '../http/http.dart';
 
 class LoadPokemonListImpl {
@@ -10,6 +11,12 @@ class LoadPokemonListImpl {
   });
 
   Future<void> loadData() async {
-    await httpClient.request(url);
+    try {
+      await httpClient.request(url);
+    } on HttpError catch (e) {
+      e == HttpError.badRequest
+          ? throw DomainError.badRequest
+          : throw DomainError.unexpected;
+    }
   }
 }
