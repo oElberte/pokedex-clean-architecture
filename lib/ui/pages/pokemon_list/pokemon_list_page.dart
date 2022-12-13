@@ -36,7 +36,7 @@ class PokemonListPage extends StatelessWidget {
                   children: [
                     Text('${snapshot.error}'),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: presenter!.loadData,
                       child: const Text('Refresh'),
                     ),
                   ],

@@ -7,6 +7,6 @@
 4. ✅ Display error message and hide list when receiving event from pokemonsData with error
 5. ✅ Hide error message and display list when receiving event from pokemonsData with data
 6. ✅ Show pokemon details based on template
-7. Show favorite pokemons with a filled heart and non favorite not filled
-8. Call the fetch Pokemons method on clicking the reload button
+7. ✅ Call the fetch Pokemons method on clicking the reload button
+8. Show favorite pokemons with a filled heart and non favorite not filled
 9. Go to pokemon details page when clicking on any pokemon

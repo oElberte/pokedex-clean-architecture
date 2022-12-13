@@ -172,4 +172,15 @@ void main() {
     expect(find.text('Poison'), findsOneWidget);
     expect(find.text('Grass'), findsNWidgets(2));
   });
+
+  testWidgets('Should call LoadPokemons on refresh button click',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    pokemonDetailsController.addError(UIError.unexpected.description);
+    await mockNetworkImagesFor(() async => await tester.pump());
+    await tester.tap(find.text('Refresh'));
+
+    verify(presenter.loadData()).called(2);
+  });
 }
