@@ -26,8 +26,7 @@ class PokemonListModel {
       previous: json['previous'],
       results: json['results']
           .map<PokemonResultsModel>(
-            (answerJson) => PokemonResultsModel.fromJson(answerJson),
-          )
+              (answer) => PokemonResultsModel.fromJson(answer))
           .toList(),
     );
   }
