@@ -8,7 +8,7 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:pokedex_clean_architecture/ui/components/pokemon_viewmodel.dart'
     as _i4;
-import 'package:pokedex_clean_architecture/ui/pages/pokemon_list/pokemon_list.dart'
+import 'package:pokedex_clean_architecture/ui/pages/pokemon_list/pokemon_list_presenter.dart'
     as _i2;
 
 // ignore_for_file: type=lint
@@ -37,21 +37,9 @@ class MockPokemonListPresenter extends _i1.Mock
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
   @override
-  _i3.Stream<_i2.PokemonListViewModel> get pokemonListStream =>
+  _i3.Stream<List<_i4.PokemonViewModel>> get pokemonStream =>
       (super.noSuchMethod(
-        Invocation.getter(#pokemonListStream),
-        returnValue: _i3.Stream<_i2.PokemonListViewModel>.empty(),
-      ) as _i3.Stream<_i2.PokemonListViewModel>);
-  @override
-  _i3.Stream<List<_i2.PokemonResultsViewModel>> get pokemonResultsStream =>
-      (super.noSuchMethod(
-        Invocation.getter(#pokemonResultsStream),
-        returnValue: _i3.Stream<List<_i2.PokemonResultsViewModel>>.empty(),
-      ) as _i3.Stream<List<_i2.PokemonResultsViewModel>>);
-  @override
-  _i3.Stream<List<_i4.PokemonViewModel>> get pokemonDetailsStream =>
-      (super.noSuchMethod(
-        Invocation.getter(#pokemonDetailsStream),
+        Invocation.getter(#pokemonStream),
         returnValue: _i3.Stream<List<_i4.PokemonViewModel>>.empty(),
       ) as _i3.Stream<List<_i4.PokemonViewModel>>);
   @override

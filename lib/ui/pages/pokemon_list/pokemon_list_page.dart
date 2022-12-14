@@ -6,6 +6,7 @@ import './pokemon_list_presenter.dart';
 import './components/components.dart';
 
 class PokemonListPage extends StatelessWidget {
+  //TODO: Remove optional binding
   final PokemonListPresenter? presenter;
 
   const PokemonListPage(this.presenter, {super.key});
@@ -29,7 +30,7 @@ class PokemonListPage extends StatelessWidget {
           });
 
           return StreamBuilder<List<PokemonViewModel>>(
-            stream: presenter!.pokemonDetailsStream,
+            stream: presenter!.pokemonStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Column(

@@ -1,12 +1,12 @@
 import '../http/http.dart';
 
 import '../../domain/entities/entities.dart';
-import 'pokemon_results_model.dart';
+import 'pokemon_result_model.dart';
 
 class PokemonListModel {
   final String? next;
   final String? previous;
-  final List<PokemonResultsModel> results;
+  final List<PokemonResultModel> results;
 
   const PokemonListModel({
     this.next,
@@ -25,8 +25,8 @@ class PokemonListModel {
       next: json['next'],
       previous: json['previous'],
       results: json['results']
-          .map<PokemonResultsModel>(
-              (answer) => PokemonResultsModel.fromJson(answer))
+          .map<PokemonResultModel>(
+              (answer) => PokemonResultModel.fromJson(answer))
           .toList(),
     );
   }
@@ -36,7 +36,7 @@ class PokemonListModel {
       next: next,
       previous: previous,
       results: results
-          .map<PokemonResultsEntity>((answer) => answer.toEntity())
+          .map<PokemonResultEntity>((answer) => answer.toEntity())
           .toList(),
     );
   }

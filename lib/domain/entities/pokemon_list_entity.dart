@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import 'pokemon_results_entity.dart';
+import 'pokemon_result_entity.dart';
 
 class PokemonListEntity extends Equatable {
   final String? next;
   final String? previous;
-  final List<PokemonResultsEntity> results;
+  final List<PokemonResultEntity> results;
 
   const PokemonListEntity({
     this.next,

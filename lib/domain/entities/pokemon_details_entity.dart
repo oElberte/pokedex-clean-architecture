@@ -6,7 +6,7 @@ class PokemonDetailsEntity extends Equatable {
   final String imageUrl;
   final int height;
   final int weight;
-  final List<StatsEntity> stats;
+  final List<StatEntity> stats;
   final List<TypeEntity> types;
 
   const PokemonDetailsEntity({
@@ -23,11 +23,11 @@ class PokemonDetailsEntity extends Equatable {
   List<Object?> get props => [id, name, height, weight, stats, types];
 }
 
-class StatsEntity extends Equatable {
+class StatEntity extends Equatable {
   final int stat;
   final String name;
 
-  const StatsEntity({
+  const StatEntity({
     required this.stat,
     required this.name,
   });
@@ -42,7 +42,7 @@ class TypeEntity extends Equatable {
   const TypeEntity({
     required this.type,
   });
-  
+
   @override
   List<Object?> get props => [type];
 }

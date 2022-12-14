@@ -12,10 +12,15 @@ class LoadPokemonDetailsImpl implements LoadPokemonDetails {
   });
 
   @override
-  Future<PokemonDetailsEntity> fetch({required String url}) async {
+  Future<List<PokemonDetailsEntity>> fetch(List<String> url) async {
     try {
-      final json = await httpClient.request(url);
-      return PokemonDetailsModel.fromJson(json).toEntity();
+      List<PokemonDetailsEntity> list = [];
+      for (var element in url) {
+        final json = await httpClient.request(element);
+        final entity = PokemonDetailsModel.fromJson(json).toEntity();
+        list.add(entity);
+      }
+      return list;
     } on HttpError catch (e) {
       switch (e) {
         case HttpError.badRequest:

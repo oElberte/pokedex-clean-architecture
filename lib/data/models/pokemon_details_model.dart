@@ -7,7 +7,7 @@ class PokemonDetailsModel {
   final String imageUrl;
   final int height;
   final int weight;
-  final List<StatsModel> stats;
+  final List<StatModel> stats;
   final List<TypeModel> types;
 
   const PokemonDetailsModel({
@@ -32,7 +32,7 @@ class PokemonDetailsModel {
       height: json['height'],
       weight: json['weight'],
       stats: json['stats']
-          .map<StatsModel>((answer) => StatsModel.fromJson(answer))
+          .map<StatModel>((answer) => StatModel.fromJson(answer))
           .toList(),
       types: json['types']
           .map<TypeModel>((answer) => TypeModel.fromJson(answer))
@@ -47,30 +47,30 @@ class PokemonDetailsModel {
       imageUrl: imageUrl,
       height: height,
       weight: weight,
-      stats: stats.map<StatsEntity>((answer) => answer.toEntity()).toList(),
+      stats: stats.map<StatEntity>((answer) => answer.toEntity()).toList(),
       types: types.map<TypeEntity>((answer) => answer.toEntity()).toList(),
     );
   }
 }
 
-class StatsModel {
+class StatModel {
   final int stat;
   final String name;
 
-  const StatsModel({
+  const StatModel({
     required this.stat,
     required this.name,
   });
 
-  factory StatsModel.fromJson(Map json) {
-    return StatsModel(
+  factory StatModel.fromJson(Map json) {
+    return StatModel(
       stat: json['base_stat'],
       name: json['stat']['name'],
     );
   }
 
-  StatsEntity toEntity() {
-    return StatsEntity(
+  StatEntity toEntity() {
+    return StatEntity(
       stat: stat,
       name: name,
     );

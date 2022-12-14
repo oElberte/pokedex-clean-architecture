@@ -113,7 +113,7 @@ void main() {
     expect(future2, throwsA(DomainError.invalidData));
   });
 
-  test('Should return Pokemon on 200', () async {
+  test('Should return PokemonList on 200', () async {
     final result = await sut.fetch();
 
     expect(
@@ -122,11 +122,11 @@ void main() {
         next: pokemonData['next'],
         previous: pokemonData['previous'],
         results: [
-          PokemonResultsEntity(
+          PokemonResultEntity(
             name: pokemonData['results'][0]['name'],
             url: pokemonData['results'][0]['url'],
           ),
-          PokemonResultsEntity(
+          PokemonResultEntity(
             name: pokemonData['results'][1]['name'],
             url: pokemonData['results'][1]['url'],
           ),

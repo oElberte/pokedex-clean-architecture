@@ -5,19 +5,22 @@ import '../http/http.dart';
 import '../models/models.dart';
 
 class LoadPokemonResultsImpl implements LoadPokemonResults {
-  final String url;
   final HttpClient httpClient;
 
   LoadPokemonResultsImpl({
-    required this.url,
     required this.httpClient,
   });
 
   @override
-  Future<PokemonResultsEntity> fetch() async {
+  Future<List<PokemonResultEntity>> fetch(List<String> url) async {
     try {
-      final json = await httpClient.request(url);
-      return PokemonResultsModel.fromJson(json).toEntity();
+      List<PokemonResultEntity> list = [];
+      for (var element in url) {
+        final json = await httpClient.request(element);
+        final entity = PokemonResultModel.fromJson(json).toEntity();
+        list.add(entity);
+      }
+      return list;
     } on HttpError catch (e) {
       switch (e) {
         case HttpError.badRequest:

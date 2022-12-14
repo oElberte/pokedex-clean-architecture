@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class PokemonResultsEntity extends Equatable {
+class PokemonResultEntity extends Equatable {
   final String name;
   final String url;
 
-  const PokemonResultsEntity({
+  const PokemonResultEntity({
     required this.name,
     required this.url,
   });

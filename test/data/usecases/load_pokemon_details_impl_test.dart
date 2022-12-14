@@ -11,7 +11,7 @@ import 'package:pokedex_clean_architecture/domain/helpers/helpers.dart';
 import 'mocks/http_client.mocks.dart';
 
 void main() {
-  late String url;
+  late List<String> urlList;
   late MockHttpClient httpClient;
   late LoadPokemonDetailsImpl sut;
   late Map pokemonData;
@@ -92,24 +92,22 @@ void main() {
   }
 
   setUp(() {
-    url = faker.internet.httpUrl();
+    urlList = [faker.internet.httpUrl()];
     httpClient = MockHttpClient();
-    sut = LoadPokemonDetailsImpl(
-      httpClient: httpClient,
-    );
+    sut = LoadPokemonDetailsImpl(httpClient: httpClient);
     mockHttpData(mockValidData());
   });
 
   test('Shoud call HttpClient on fetch', () async {
-    await sut.fetch(url: url);
+    await sut.fetch(urlList);
 
-    verify(httpClient.request(url)).called(1);
+    verify(httpClient.request(any)).called(1);
   });
 
   test('Should throw BadRequestError if HttpClient returns 400', () async {
     mockHttpError(HttpError.badRequest);
 
-    final future = sut.fetch(url: url);
+    final future = sut.fetch(urlList);
 
     expect(future, throwsA(DomainError.badRequest));
   });
@@ -117,7 +115,7 @@ void main() {
   test('Should throw UnexpectedError if HttpClient returns 404', () async {
     mockHttpError(HttpError.notFound);
 
-    final future = sut.fetch(url: url);
+    final future = sut.fetch(urlList);
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -125,7 +123,7 @@ void main() {
   test('Should throw UnexpectedError if HttpClient returns 500', () async {
     mockHttpError(HttpError.serverError);
 
-    final future = sut.fetch(url: url);
+    final future = sut.fetch(urlList);
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -134,19 +132,18 @@ void main() {
       'Should throw InvalidDataError if HttpClient returns 200 with invalid data',
       () async {
     mockHttpData(mockDataWithoutId());
-    final future = sut.fetch(url: url);
+    final future = sut.fetch(urlList);
     expect(future, throwsA(DomainError.invalidData));
 
     mockHttpData(mockDataWithoutImage());
-    final future2 = sut.fetch(url: url);
+    final future2 = sut.fetch(urlList);
     expect(future2, throwsA(DomainError.invalidData));
   });
 
-  test('Should return Pokemon on 200', () async {
-    final result = await sut.fetch(url: url);
+  test('Should return PokemonDetails on 200', () async {
+    final result = await sut.fetch(urlList);
 
-    expect(
-      result,
+    expect(result, [
       PokemonDetailsEntity(
         id: pokemonData['id'],
         name: pokemonData['name'],
@@ -155,11 +152,11 @@ void main() {
         height: pokemonData['height'],
         weight: pokemonData['weight'],
         stats: [
-          StatsEntity(
+          StatEntity(
             stat: pokemonData['stats'][0]['base_stat'],
             name: pokemonData['stats'][0]['stat']['name'],
           ),
-          StatsEntity(
+          StatEntity(
             stat: pokemonData['stats'][1]['base_stat'],
             name: pokemonData['stats'][1]['stat']['name'],
           ),
@@ -173,6 +170,6 @@ void main() {
           ),
         ],
       ),
-    );
+    ]);
   });
 }

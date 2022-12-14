@@ -16,38 +16,25 @@ import 'pokemon_list_page_test.mocks.dart';
 void main() {
   late PokemonListPresenter presenter;
   late StreamController<bool> isLoadingController;
-  late StreamController<PokemonListViewModel> pokemonListController;
-  late StreamController<List<PokemonResultsViewModel>> pokemonResultsController;
-  late StreamController<List<PokemonViewModel>> pokemonDetailsController;
+  late StreamController<List<PokemonViewModel>> pokemonController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
-    pokemonListController = StreamController<PokemonListViewModel>();
-    pokemonResultsController =
-        StreamController<List<PokemonResultsViewModel>>();
-    pokemonDetailsController = StreamController<List<PokemonViewModel>>();
+    pokemonController = StreamController<List<PokemonViewModel>>();
   }
 
   void mockStreams() {
     when(presenter.isLoadingStream).thenAnswer(
       (_) => isLoadingController.stream,
     );
-    when(presenter.pokemonListStream).thenAnswer(
-      (_) => pokemonListController.stream,
-    );
-    when(presenter.pokemonDetailsStream).thenAnswer(
-      (_) => pokemonDetailsController.stream,
-    );
-    when(presenter.pokemonResultsStream).thenAnswer(
-      (_) => pokemonResultsController.stream,
+    when(presenter.pokemonStream).thenAnswer(
+      (_) => pokemonController.stream,
     );
   }
 
   void closeStreams() {
     isLoadingController.close();
-    pokemonListController.close();
-    pokemonDetailsController.close();
-    pokemonResultsController.close();
+    pokemonController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -71,19 +58,21 @@ void main() {
 
   List<PokemonViewModel> makePokemons() => const [
         PokemonViewModel(
+          next: 'https://next.com',
+          previous: null,
           id: '1',
           name: 'Bulbasaur',
           imageUrl: 'http://teste.com/',
           height: '6',
           weight: '70',
           stats: [
-            StatsViewModel(
+            StatViewModel(
               stat: 1,
               name: 'HP',
             ),
           ],
           types: [
-            TypesViewModel(
+            TypeViewModel(
               type: 'Grass',
             ),
           ],
@@ -95,20 +84,20 @@ void main() {
           height: '10',
           weight: '80',
           stats: [
-            StatsViewModel(
+            StatViewModel(
               stat: 1,
               name: 'HP',
             ),
-            StatsViewModel(
+            StatViewModel(
               stat: 2,
               name: 'ATK',
             ),
           ],
           types: [
-            TypesViewModel(
+            TypeViewModel(
               type: 'Grass',
             ),
-            TypesViewModel(
+            TypeViewModel(
               type: 'Poison',
             ),
           ],
@@ -139,7 +128,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    pokemonDetailsController.addError(UIError.unexpected.description);
+    pokemonController.addError(UIError.unexpected.description);
     await tester.pump();
 
     expect(
@@ -155,7 +144,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    pokemonDetailsController.add(makePokemons());
+    pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pump());
 
     expect(
@@ -176,7 +165,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    pokemonDetailsController.addError(UIError.unexpected.description);
+    pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
     await tester.tap(find.text('Refresh'));
 
