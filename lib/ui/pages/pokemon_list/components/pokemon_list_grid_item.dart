@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/components.dart';
 
 class PokemonListGridItem extends StatelessWidget {
-  final PokemonDetailsViewModel viewModel;
+  final PokemonViewModel viewModel;
 
   const PokemonListGridItem(this.viewModel, {Key? key}) : super(key: key);
 
@@ -49,12 +49,12 @@ class PokemonListGridItem extends StatelessWidget {
                   ),
                 ),
                 if (viewModel.types.length >= 2)
-                Text(
-                  viewModel.types[1].type,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  Text(
+                    viewModel.types[1].type,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                ),
                 Text(
                   viewModel.id,
                   style: const TextStyle(

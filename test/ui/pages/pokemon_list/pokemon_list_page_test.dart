@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -19,15 +18,14 @@ void main() {
   late StreamController<bool> isLoadingController;
   late StreamController<PokemonListViewModel> pokemonListController;
   late StreamController<List<PokemonResultsViewModel>> pokemonResultsController;
-  late StreamController<List<PokemonDetailsViewModel>> pokemonDetailsController;
+  late StreamController<List<PokemonViewModel>> pokemonDetailsController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
     pokemonListController = StreamController<PokemonListViewModel>();
     pokemonResultsController =
         StreamController<List<PokemonResultsViewModel>>();
-    pokemonDetailsController =
-        StreamController<List<PokemonDetailsViewModel>>();
+    pokemonDetailsController = StreamController<List<PokemonViewModel>>();
   }
 
   void mockStreams() {
@@ -56,22 +54,23 @@ void main() {
     presenter = MockPokemonListPresenter();
     initStreams();
     mockStreams();
-    final pokemonListPage = GetMaterialApp(
+    final pokemonListPage = MaterialApp(
+      title: 'Pokédex',
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      getPages: [
-        GetPage(
-          name: '/',
-          page: () => PokemonListPage(presenter),
-        ),
-      ],
+      routes: {
+        '/': (context) {
+          return PokemonListPage(presenter);
+        },
+      },
     );
     await mockNetworkImagesFor(() async {
       await tester.pumpWidget(pokemonListPage);
     });
   }
 
-  List<PokemonDetailsViewModel> makePokemons() => const [
-        PokemonDetailsViewModel(
+  List<PokemonViewModel> makePokemons() => const [
+        PokemonViewModel(
           id: '1',
           name: 'Bulbasaur',
           imageUrl: 'http://teste.com/',
@@ -89,7 +88,7 @@ void main() {
             ),
           ],
         ),
-        PokemonDetailsViewModel(
+        PokemonViewModel(
           id: '2',
           name: 'Ivysaur',
           imageUrl: 'http://teste2.com/',

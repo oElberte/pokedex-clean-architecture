@@ -28,7 +28,7 @@ class PokemonListPage extends StatelessWidget {
             }
           });
 
-          return StreamBuilder<List<PokemonDetailsViewModel>>(
+          return StreamBuilder<List<PokemonViewModel>>(
             stream: presenter!.pokemonDetailsStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {

@@ -1,4 +1,6 @@
-class PokemonDetailsViewModel {
+class PokemonViewModel {
+  final String? next;
+  final String? previous;
   final String id;
   final String name;
   final String imageUrl;
@@ -7,7 +9,9 @@ class PokemonDetailsViewModel {
   final List<StatsViewModel> stats;
   final List<TypesViewModel> types;
 
-  const PokemonDetailsViewModel({
+  const PokemonViewModel({
+    this.next,
+    this.previous,
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -31,7 +35,7 @@ class StatsViewModel {
 class TypesViewModel {
   final String type;
 
-  const TypesViewModel ({
+  const TypesViewModel({
     required this.type,
   });
 }
