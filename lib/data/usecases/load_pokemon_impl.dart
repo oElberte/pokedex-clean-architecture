@@ -1,7 +1,6 @@
 import '../../domain/entities/pokemon_entity.dart';
 import '../../domain/usecases/usecases.dart';
 
-//TODO: Add tests for this use case
 class LoadPokemonImpl implements LoadPokemon {
   final LoadPokemonList loadList;
   final LoadPokemonDetails loadDetails;
@@ -17,9 +16,9 @@ class LoadPokemonImpl implements LoadPokemon {
 
     final list = await loadList.fetch();
     final urlList = list.results.map((result) => result.url).toList();
-    final pokemonDetails = await loadDetails.fetch(urlList);
+    final pokemonDetailsList = await loadDetails.fetch(urlList);
 
-    for (var pokemon in pokemonDetails) {
+    for (var pokemon in pokemonDetailsList) {
       final entity = PokemonEntity(
         next: list.next,
         previous: list.previous,
