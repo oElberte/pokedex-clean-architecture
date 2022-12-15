@@ -2,7 +2,9 @@ import '../../domain/entities/pokemon_entity.dart';
 import '../../domain/usecases/usecases.dart';
 
 class LoadPokemonImpl implements LoadPokemon {
+  @override
   final LoadPokemonList loadList;
+  @override
   final LoadPokemonDetails loadDetails;
 
   LoadPokemonImpl({

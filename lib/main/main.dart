@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './factories/factories.dart';
+import 'factories/factories.dart';
 
 void main() {
   runApp(const App());

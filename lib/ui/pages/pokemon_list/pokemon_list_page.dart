@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex_clean_architecture/ui/pages/pages.dart';
+import '../pages.dart';
 
 import '../../components/components.dart';
-import './pokemon_list_presenter.dart';
-import './components/components.dart';
+import 'pokemon_list_presenter.dart';
+import 'components/components.dart';
 
 class PokemonListPage extends StatelessWidget {
   //TODO: Remove optional binding
