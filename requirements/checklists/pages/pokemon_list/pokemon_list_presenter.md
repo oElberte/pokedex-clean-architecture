@@ -1,7 +1,7 @@
 # Pokemon List Presenter
 
 > ## Rules
-1. Call LoadPokemonList, LoadPokemonResults, LoadPokemonDetails on loadData method
+1. ✅ Call LoadPokemon fetch on loadData method
 2. Notify isLoadingStream as true before calling LoadPokemon methods
 3. Notify isLoadingStream as false at the end of LoadPokemon methods
 4. Notify pokemonListStream with error if LoadPokemonList returns error

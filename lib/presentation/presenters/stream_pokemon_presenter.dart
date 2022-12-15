@@ -29,7 +29,9 @@ class StreamPokemonPresenter implements PokemonListPresenter {
   void _update() => _controller.add(_state);
 
   @override
-  Future<void> loadData() async {}
+  Future<void> loadData() async {
+    await loadPokemon.fetch();
+  }
 
   void dispose() {
     _controller.close();
