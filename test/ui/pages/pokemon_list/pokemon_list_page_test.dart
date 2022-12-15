@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:pokedex_clean_architecture/ui/components/components.dart';
-import 'package:pokedex_clean_architecture/ui/helpers/helpers.dart';
+import 'package:pokedex/ui/components/components.dart';
+import 'package:pokedex/ui/helpers/helpers.dart';
 
-import 'package:pokedex_clean_architecture/ui/pages/pages.dart';
+import 'package:pokedex/ui/pages/pages.dart';
 
 import 'pokemon_list_page_test.mocks.dart';
 

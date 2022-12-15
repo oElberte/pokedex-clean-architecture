@@ -2,12 +2,13 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:pokedex_clean_architecture/data/usecases/usecases.dart';
+import 'package:pokedex/data/usecases/usecases.dart';
 
-import 'package:pokedex_clean_architecture/domain/entities/entities.dart';
-import 'package:pokedex_clean_architecture/domain/helpers/helpers.dart';
+import 'package:pokedex/domain/entities/entities.dart';
+import 'package:pokedex/domain/helpers/helpers.dart';
 
-import 'load_pokemon_impl_test.mocks.dart';
+import 'mocks/load_pokemon_details.mocks.dart';
+import 'mocks/load_pokemon_list.mocks.dart';
 
 void main() {
   late MockLoadPokemonList loadList;
@@ -123,7 +124,6 @@ void main() {
     final future = sut.fetch();
     expect(future, throwsA(DomainError.badRequest));
 
-
     mockDetailsError(DomainError.badRequest);
     final future2 = sut.fetch();
     expect(future2, throwsA(DomainError.badRequest));
@@ -134,7 +134,6 @@ void main() {
     final future = sut.fetch();
     expect(future, throwsA(DomainError.invalidData));
 
-
     mockDetailsError(DomainError.invalidData);
     final future2 = sut.fetch();
     expect(future2, throwsA(DomainError.invalidData));
@@ -144,7 +143,6 @@ void main() {
     mockListError(DomainError.unexpected);
     final future = sut.fetch();
     expect(future, throwsA(DomainError.unexpected));
-
 
     mockDetailsError(DomainError.unexpected);
     final future2 = sut.fetch();

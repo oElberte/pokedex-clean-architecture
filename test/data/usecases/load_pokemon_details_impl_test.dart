@@ -2,11 +2,11 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:pokedex_clean_architecture/data/http/http.dart';
-import 'package:pokedex_clean_architecture/data/usecases/usecases.dart';
+import 'package:pokedex/data/http/http.dart';
+import 'package:pokedex/data/usecases/usecases.dart';
 
-import 'package:pokedex_clean_architecture/domain/entities/entities.dart';
-import 'package:pokedex_clean_architecture/domain/helpers/helpers.dart';
+import 'package:pokedex/domain/entities/entities.dart';
+import 'package:pokedex/domain/helpers/helpers.dart';
 
 import 'mocks/http_client.mocks.dart';
 
