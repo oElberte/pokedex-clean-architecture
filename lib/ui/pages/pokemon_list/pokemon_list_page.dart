@@ -5,24 +5,35 @@ import '../../components/components.dart';
 import 'pokemon_list_presenter.dart';
 import 'components/components.dart';
 
-class PokemonListPage extends StatelessWidget {
+class PokemonListPage extends StatefulWidget {
   //TODO: Remove optional binding
   final PokemonListPresenter? presenter;
 
   const PokemonListPage(this.presenter, {super.key});
 
   @override
+  State<PokemonListPage> createState() => _PokemonListPageState();
+}
+
+class _PokemonListPageState extends State<PokemonListPage> {
+  @override
+  void dispose() {
+    super.dispose();
+    widget.presenter!.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    presenter!.loadData();
+    widget.presenter!.loadData();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokédex'),
       ),
       body: StreamBuilder<List<PokemonViewModel>>(
-        stream: presenter!.pokemonStream,
+        stream: widget.presenter!.pokemonStream,
         builder: (context, snapshot) {
-          presenter!.isLoadingStream.listen((isLoading) {
+          widget.presenter!.isLoadingStream.listen((isLoading) {
             if (isLoading) {
               showLoading(context);
             } else {
@@ -30,9 +41,9 @@ class PokemonListPage extends StatelessWidget {
             }
           });
 
-          presenter!.pokemonErrorStream.listen((error) async {
+          widget.presenter!.pokemonErrorStream.listen((error) async {
             if (error != null && error.isNotEmpty) {
-              showError(context, error, onTap: presenter!.loadData);
+              showError(context, error, onTap: widget.presenter!.loadData);
             }
           });
 

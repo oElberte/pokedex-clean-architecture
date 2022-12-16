@@ -114,7 +114,8 @@ void main() {
     mockLoadDataError(DomainError.unexpected);
 
     expectLater(sut.isLoadingStream, emits(false));
-    sut.pokemonErrorStream.listen(expectAsync1((error) => expect(error, UIError.unexpected.description)));
+    sut.pokemonErrorStream.listen(
+        expectAsync1((error) => expect(error, UIError.unexpected.description)));
 
     await sut.loadData();
   });
