@@ -17,24 +17,30 @@ void main() {
   late PokemonListPresenter presenter;
   late StreamController<bool> isLoadingController;
   late StreamController<List<PokemonViewModel>> pokemonController;
+  late StreamController<String?> pokemonErrorController;
 
   void initStreams() {
-    isLoadingController = StreamController<bool>();
-    pokemonController = StreamController<List<PokemonViewModel>>();
+    isLoadingController = StreamController<bool>.broadcast();
+    pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
+    pokemonErrorController = StreamController<String?>.broadcast();
   }
 
   void mockStreams() {
     when(presenter.isLoadingStream).thenAnswer(
-      (_) => isLoadingController.stream,
+      (_) => isLoadingController.stream.distinct(),
     );
     when(presenter.pokemonStream).thenAnswer(
-      (_) => pokemonController.stream,
+      (_) => pokemonController.stream.distinct(),
+    );
+    when(presenter.pokemonErrorStream).thenAnswer(
+      (_) => pokemonErrorController.stream.distinct(),
     );
   }
 
   void closeStreams() {
     isLoadingController.close();
     pokemonController.close();
+    pokemonErrorController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -128,14 +134,10 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    pokemonController.addError(UIError.unexpected.description);
+    pokemonErrorController.add(UIError.unexpected.description);
     await tester.pump();
 
-    expect(
-      find.text(
-          'Something wrong happened. Try again later or refresh the app.'),
-      findsOneWidget,
-    );
+    expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
     expect(find.text('Bulbasaur'), findsNothing);
   });
@@ -147,11 +149,7 @@ void main() {
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pump());
 
-    expect(
-      find.text(
-          'Something wrong happened. Try again later or refresh the app.'),
-      findsNothing,
-    );
+    expect(find.text(UIError.unexpected.description), findsNothing);
     expect(find.text('Refresh'), findsNothing);
     expect(find.text('1'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
@@ -164,10 +162,15 @@ void main() {
   testWidgets('Should call LoadPokemons on refresh button click',
       (WidgetTester tester) async {
     await loadPage(tester);
+    
+    expectLater(presenter.pokemonErrorStream, emitsInOrder([UIError.unexpected.description, null]));
 
-    pokemonController.addError(UIError.unexpected.description);
+    pokemonErrorController.add(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
     await tester.tap(find.text('Refresh'));
+
+    pokemonErrorController.add(null);
+    pokemonController.add(makePokemons());
 
     verify(presenter.loadData()).called(2);
   });

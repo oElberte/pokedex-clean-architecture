@@ -6,4 +6,5 @@ abstract class PokemonListPresenter {
   Stream<String?> get pokemonErrorStream;
 
   Future<void> loadData();
+  void dispose();
 }

@@ -104,8 +104,8 @@ void main() {
 
   test('Should emit correct events on success', () async {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    //TODO: Check when running the app. It was emitsInOrder without addAll in StreamPokemonPresenter.
     expectLater(sut.pokemonStream, emits(makePokemonViewModelList()));
+    sut.pokemonErrorStream.listen(expectAsync1((error) => expect(error, null)));
 
     await sut.loadData();
   });
@@ -114,7 +114,7 @@ void main() {
     mockLoadDataError(DomainError.unexpected);
 
     expectLater(sut.isLoadingStream, emits(false));
-    expectLater(sut.pokemonErrorStream, emits(UIError.unexpected.description));
+    sut.pokemonErrorStream.listen(expectAsync1((error) => expect(error, UIError.unexpected.description)));
 
     await sut.loadData();
   });

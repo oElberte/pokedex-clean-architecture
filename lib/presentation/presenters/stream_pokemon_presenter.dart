@@ -38,6 +38,7 @@ class StreamPokemonPresenter implements PokemonListPresenter {
   @override
   Future<void> loadData() async {
     _state.isLoading = true;
+    _state.pokemonError = null;
     _update();
     try {
       final pokemonEntity = await loadPokemon.fetch();
@@ -52,6 +53,7 @@ class StreamPokemonPresenter implements PokemonListPresenter {
     }
   }
 
+  @override
   void dispose() {
     _controller.close();
   }
