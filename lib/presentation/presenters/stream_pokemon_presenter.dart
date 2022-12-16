@@ -36,26 +36,7 @@ class StreamPokemonPresenter implements PokemonListPresenter {
     _update();
     final pokemonEntity = await loadPokemon.fetch();
     final pokemonList = pokemonEntity
-        .map((pokemon) => PokemonViewModel(
-              next: pokemon.next,
-              previous: pokemon.previous,
-              id: pokemon.id.toString(),
-              name: pokemon.name.capitalize().removeGender(),
-              imageUrl: pokemon.imageUrl,
-              height: pokemon.height.toString(),
-              weight: pokemon.weight.toString(),
-              stats: pokemon.stats
-                  .map((e) => StatViewModel(
-                        stat: e.stat,
-                        name: e.name.capitalize(),
-                      ))
-                  .toList(),
-              types: pokemon.types
-                  .map((e) => TypeViewModel(
-                        type: e.type.capitalize(),
-                      ))
-                  .toList(),
-            ))
+        .map((pokemon) => pokemon.toViewModel())
         .toList();
     _state.pokemon.addAll(pokemonList);
     _update();
