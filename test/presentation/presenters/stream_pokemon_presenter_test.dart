@@ -3,10 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pokedex/domain/entities/entities.dart';
+import 'package:pokedex/domain/helpers/domain_error.dart';
 import 'package:pokedex/domain/usecases/usecases.dart';
 import 'package:pokedex/presentation/helpers/helpers.dart';
 import 'package:pokedex/presentation/presenters/presenters.dart';
 import 'package:pokedex/ui/components/components.dart';
+import 'package:pokedex/ui/helpers/helpers.dart';
 
 import 'stream_pokemon_presenter_test.mocks.dart';
 
@@ -76,10 +78,17 @@ void main() {
         ),
       ];
 
+  PostExpectation mockLoadDataCall() => when(loadPokemon.fetch());
+
   void mockLoadData(List<PokemonEntity> data) {
     pokemonEntityList = data;
-    when(loadPokemon.fetch()).thenAnswer((_) async => pokemonEntityList);
+    mockLoadDataCall().thenAnswer((_) async => pokemonEntityList);
   }
+
+  void mockLoadDataError(DomainError error) =>
+      mockLoadDataCall().thenThrow(error);
+
+  tearDown(() => sut.dispose());
 
   setUp(() {
     loadPokemon = MockLoadPokemon();
@@ -97,6 +106,15 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     //TODO: Check when running the app. It was emitsInOrder without addAll in StreamPokemonPresenter.
     expectLater(sut.pokemonStream, emits(makePokemonViewModelList()));
+
+    await sut.loadData();
+  });
+
+  test('Should emit correct events on UnexpectedError', () async {
+    mockLoadDataError(DomainError.unexpected);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    expectLater(sut.pokemonErrorStream, emits(UIError.unexpected.description));
 
     await sut.loadData();
   });

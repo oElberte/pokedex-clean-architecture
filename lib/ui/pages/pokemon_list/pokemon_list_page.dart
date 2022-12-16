@@ -60,6 +60,7 @@ class PokemonListPage extends StatelessWidget {
                   },
                 );
               }
+
               return const SizedBox();
             },
           );
