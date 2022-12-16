@@ -45,8 +45,17 @@ class StreamPokemonPresenter implements PokemonListPresenter {
       final pokemonList = pokemonEntity.map((p) => p.toViewModel()).toList();
       _state.pokemon.addAll(pokemonList);
       _update();
-    } on DomainError {
-      _state.pokemonError = UIError.unexpected.description;
+    } on DomainError catch (e) {
+      switch (e) {
+        case DomainError.invalidData:
+          _state.pokemonError = UIError.invalidData.description;
+          break;
+        case DomainError.badRequest:
+          _state.pokemonError = UIError.badRequest.description;
+          break;
+        default:
+          _state.pokemonError = UIError.unexpected.description;
+      }
     } finally {
       _state.isLoading = false;
       _update();

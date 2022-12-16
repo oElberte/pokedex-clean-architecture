@@ -114,8 +114,31 @@ void main() {
     mockLoadDataError(DomainError.unexpected);
 
     expectLater(sut.isLoadingStream, emits(false));
-    sut.pokemonErrorStream.listen(
-        expectAsync1((error) => expect(error, UIError.unexpected.description)));
+    sut.pokemonErrorStream.listen(expectAsync1(
+      (error) => expect(error, UIError.unexpected.description),
+    ));
+
+    await sut.loadData();
+  });
+
+  test('Should emit correct events on InvalidData', () async {
+    mockLoadDataError(DomainError.invalidData);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.pokemonErrorStream.listen(expectAsync1(
+      (error) => expect(error, UIError.invalidData.description),
+    ));
+
+    await sut.loadData();
+  });
+
+  test('Should emit correct events on BadRequest', () async {
+    mockLoadDataError(DomainError.badRequest);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.pokemonErrorStream.listen(expectAsync1(
+      (error) => expect(error, UIError.badRequest.description),
+    ));
 
     await sut.loadData();
   });
