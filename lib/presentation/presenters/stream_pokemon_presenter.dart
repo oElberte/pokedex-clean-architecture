@@ -1,64 +1,40 @@
 import 'dart:async';
 
-import 'package:pokedex/presentation/helpers/helpers.dart';
-
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
-
 import '../../ui/components/components.dart';
 import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
-
-class PokemonState {
-  List<PokemonViewModel> pokemon = [];
-  String? pokemonError;
-  bool isLoading = false;
-}
+import '../helpers/helpers.dart';
 
 class StreamPokemonPresenter implements PokemonListPresenter {
   final LoadPokemon loadPokemon;
 
-  final _controller = StreamController<PokemonState>.broadcast();
-  final _state = PokemonState();
+  final _controller = StreamController<List<PokemonViewModel>>.broadcast();
 
   @override
-  Stream<List<PokemonViewModel>> get pokemonStream =>
-      _controller.stream.map((state) => state.pokemon).distinct();
-  @override
-  Stream<String?> get pokemonErrorStream =>
-      _controller.stream.map((state) => state.pokemonError).distinct();
-  @override
-  Stream<bool> get isLoadingStream =>
-      _controller.stream.map((state) => state.isLoading).distinct();
+  Stream<List<PokemonViewModel>> get pokemonStream => _controller.stream.distinct();
 
   StreamPokemonPresenter(this.loadPokemon);
 
-  void _update() => _controller.add(_state);
-
   @override
   Future<void> loadData() async {
-    _state.isLoading = true;
-    _state.pokemonError = null;
-    _update();
     try {
       final pokemonEntity = await loadPokemon.fetch();
       final pokemonList = pokemonEntity.map((p) => p.toViewModel()).toList();
-      _state.pokemon.addAll(pokemonList);
-      _update();
+      _controller.add(pokemonList);
     } on DomainError catch (e) {
       switch (e) {
         case DomainError.invalidData:
-          _state.pokemonError = UIError.invalidData.description;
+          _controller.addError(UIError.invalidData.description);
           break;
         case DomainError.badRequest:
-          _state.pokemonError = UIError.badRequest.description;
+          _controller.addError(UIError.badRequest.description);
           break;
         default:
-          _state.pokemonError = UIError.unexpected.description;
+          _controller.addError(UIError.unexpected.description);
+          break;
       }
-    } finally {
-      _state.isLoading = false;
-      _update();
     }
   }
 

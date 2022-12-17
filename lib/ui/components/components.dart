@@ -1,3 +1,3 @@
-export './spinner_dialog.dart';
 export './pokemon_viewmodel.dart';
-export './error_dialog.dart';
+export './show_error.dart';
+export './show_loading.dart';

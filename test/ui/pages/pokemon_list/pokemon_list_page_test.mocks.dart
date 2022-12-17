@@ -31,21 +31,11 @@ class MockPokemonListPresenter extends _i1.Mock
   }
 
   @override
-  _i3.Stream<bool> get isLoadingStream => (super.noSuchMethod(
-        Invocation.getter(#isLoadingStream),
-        returnValue: _i3.Stream<bool>.empty(),
-      ) as _i3.Stream<bool>);
-  @override
   _i3.Stream<List<_i4.PokemonViewModel>> get pokemonStream =>
       (super.noSuchMethod(
         Invocation.getter(#pokemonStream),
         returnValue: _i3.Stream<List<_i4.PokemonViewModel>>.empty(),
       ) as _i3.Stream<List<_i4.PokemonViewModel>>);
-  @override
-  _i3.Stream<String?> get pokemonErrorStream => (super.noSuchMethod(
-        Invocation.getter(#pokemonErrorStream),
-        returnValue: _i3.Stream<String?>.empty(),
-      ) as _i3.Stream<String?>);
   @override
   _i3.Future<void> loadData() => (super.noSuchMethod(
         Invocation.method(

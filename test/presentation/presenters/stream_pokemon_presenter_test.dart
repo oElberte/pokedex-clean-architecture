@@ -85,8 +85,9 @@ void main() {
     mockLoadDataCall().thenAnswer((_) async => pokemonEntityList);
   }
 
-  void mockLoadDataError(DomainError error) =>
-      mockLoadDataCall().thenThrow(error);
+  void mockLoadDataError(DomainError error) {
+    mockLoadDataCall().thenThrow(error);
+  }
 
   tearDown(() => sut.dispose());
 
@@ -103,9 +104,7 @@ void main() {
   });
 
   test('Should emit correct events on success', () async {
-    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.pokemonStream, emits(makePokemonViewModelList()));
-    sut.pokemonErrorStream.listen(expectAsync1((error) => expect(error, null)));
 
     await sut.loadData();
   });
@@ -113,10 +112,7 @@ void main() {
   test('Should emit correct events on UnexpectedError', () async {
     mockLoadDataError(DomainError.unexpected);
 
-    expectLater(sut.isLoadingStream, emits(false));
-    sut.pokemonErrorStream.listen(expectAsync1(
-      (error) => expect(error, UIError.unexpected.description),
-    ));
+    expectLater(sut.pokemonStream, emitsError(UIError.unexpected.description));
 
     await sut.loadData();
   });
@@ -124,10 +120,7 @@ void main() {
   test('Should emit correct events on InvalidData', () async {
     mockLoadDataError(DomainError.invalidData);
 
-    expectLater(sut.isLoadingStream, emits(false));
-    sut.pokemonErrorStream.listen(expectAsync1(
-      (error) => expect(error, UIError.invalidData.description),
-    ));
+    expectLater(sut.pokemonStream, emitsError(UIError.invalidData.description));
 
     await sut.loadData();
   });
@@ -135,10 +128,7 @@ void main() {
   test('Should emit correct events on BadRequest', () async {
     mockLoadDataError(DomainError.badRequest);
 
-    expectLater(sut.isLoadingStream, emits(false));
-    sut.pokemonErrorStream.listen(expectAsync1(
-      (error) => expect(error, UIError.badRequest.description),
-    ));
+    expectLater(sut.pokemonStream, emitsError(UIError.badRequest.description));
 
     await sut.loadData();
   });

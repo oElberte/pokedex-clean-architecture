@@ -1,6 +1,5 @@
-import '../http/http.dart';
-
 import '../../domain/entities/entities.dart';
+import '../http/http.dart';
 import 'pokemon_result_model.dart';
 
 class PokemonListModel {

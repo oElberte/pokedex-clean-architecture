@@ -15,32 +15,20 @@ import 'pokemon_list_page_test.mocks.dart';
 @GenerateMocks([PokemonListPresenter])
 void main() {
   late PokemonListPresenter presenter;
-  late StreamController<bool> isLoadingController;
   late StreamController<List<PokemonViewModel>> pokemonController;
-  late StreamController<String?> pokemonErrorController;
 
   void initStreams() {
-    isLoadingController = StreamController<bool>.broadcast();
     pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
-    pokemonErrorController = StreamController<String?>.broadcast();
   }
 
   void mockStreams() {
-    when(presenter.isLoadingStream).thenAnswer(
-      (_) => isLoadingController.stream.distinct(),
-    );
     when(presenter.pokemonStream).thenAnswer(
       (_) => pokemonController.stream.distinct(),
-    );
-    when(presenter.pokemonErrorStream).thenAnswer(
-      (_) => pokemonErrorController.stream.distinct(),
     );
   }
 
   void closeStreams() {
-    isLoadingController.close();
     pokemonController.close();
-    pokemonErrorController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -112,30 +100,28 @@ void main() {
 
   tearDown(() => closeStreams());
 
-  testWidgets('Shoud call LoadData on page load', (WidgetTester tester) async {
+  testWidgets('Shoud call LoadData on page load', (tester) async {
     await loadPage(tester);
 
     verify(presenter.loadData()).called(1);
   });
 
-  testWidgets('Should handle loading correctly', (WidgetTester tester) async {
+  testWidgets('Should handle loading correctly', (tester) async {
     await loadPage(tester);
 
-    isLoadingController.add(true);
-    await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    isLoadingController.add(false);
-    await tester.pump();
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    expectLater(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('Should present error if pokemonDetailsStream fails',
-      (WidgetTester tester) async {
+  testWidgets('Should present error if LoadData fails', (tester) async {
     await loadPage(tester);
 
-    pokemonErrorController.add(UIError.unexpected.description);
-    await tester.pump();
+    pokemonController.addError(UIError.unexpected.description);
+    await mockNetworkImagesFor(() async => await tester.pump());
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
@@ -159,17 +145,16 @@ void main() {
     expect(find.text('Grass'), findsNWidgets(2));
   });
 
-  testWidgets('Should call LoadPokemons on refresh button click',
-      (WidgetTester tester) async {
+  testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
-    
-    expectLater(presenter.pokemonErrorStream, emitsInOrder([UIError.unexpected.description, null]));
 
-    pokemonErrorController.add(UIError.unexpected.description);
+    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+
+    pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
     await tester.tap(find.text('Refresh'));
 
-    pokemonErrorController.add(null);
+    expectLater(presenter.pokemonStream, emits(makePokemons()));
     pokemonController.add(makePokemons());
 
     verify(presenter.loadData()).called(2);

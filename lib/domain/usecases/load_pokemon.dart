@@ -1,5 +1,4 @@
 import '../entities/pokemon_entity.dart';
-
 import 'usecases.dart';
 
 abstract class LoadPokemon {
