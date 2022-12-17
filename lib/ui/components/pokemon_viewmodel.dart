@@ -9,7 +9,7 @@ class PokemonViewModel extends Equatable {
   final String height;
   final String weight;
   final List<StatViewModel> stats;
-  final List<TypeViewModel> types;
+  final List<String> types;
 
   const PokemonViewModel({
     this.next,

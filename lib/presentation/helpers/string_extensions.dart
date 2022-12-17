@@ -1,6 +1,6 @@
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1)}";
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 
   String removeGender() {
@@ -8,5 +8,15 @@ extension StringExtension on String {
       return substring(0, length - 2);
     }
     return this;
+  }
+
+  String fixId() {
+    if (length == 1) {
+      return '#00$this';
+    } else if (length == 2) {
+      return '#0$this';
+    } else {
+      return '#$this';
+    }
   }
 }

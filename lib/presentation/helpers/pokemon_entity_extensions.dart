@@ -8,22 +8,18 @@ extension PokemonEntityExtensions on PokemonEntity {
     return PokemonViewModel(
       next: next,
       previous: previous,
-      id: id.toString(),
-      name: name.capitalize().removeGender(),
+      id: id.toString().fixId(),
+      name: name.toUpperCase().removeGender(),
       imageUrl: imageUrl,
       height: height.toString(),
       weight: weight.toString(),
       stats: stats
           .map((e) => StatViewModel(
                 stat: e.stat,
-                name: e.name.capitalize(),
+                name: e.name.toUpperCase(),
               ))
           .toList(),
-      types: types
-          .map((e) => TypeViewModel(
-                type: e.type.capitalize(),
-              ))
-          .toList(),
+      types: types.map((e) => e.type.toUpperCase()).toList(),
     );
   }
 }

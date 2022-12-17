@@ -44,24 +44,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
           }
 
           if (snapshot.hasData) {
-            List<PokemonViewModel> data = snapshot.data!;
-
-            return GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 10,
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 2 / 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return PokemonListGridItem(data[index]);
-              },
-            );
+            return PokemonListItems(snapshot.data!);
           }
 
           return const SizedBox();

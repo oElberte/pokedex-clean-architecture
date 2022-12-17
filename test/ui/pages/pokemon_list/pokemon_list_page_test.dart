@@ -66,9 +66,7 @@ void main() {
             ),
           ],
           types: [
-            TypeViewModel(
-              type: 'Grass',
-            ),
+            'Grass',
           ],
         ),
         PokemonViewModel(
@@ -88,12 +86,8 @@ void main() {
             ),
           ],
           types: [
-            TypeViewModel(
-              type: 'Grass',
-            ),
-            TypeViewModel(
-              type: 'Poison',
-            ),
+            'Grass',
+            'Poison',
           ],
         ),
       ];
@@ -148,7 +142,8 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(
+        presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());

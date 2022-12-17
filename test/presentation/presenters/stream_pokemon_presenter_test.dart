@@ -52,28 +52,25 @@ void main() {
         PokemonViewModel(
           next: pokemonEntityList[0].next,
           previous: pokemonEntityList[0].previous,
-          id: pokemonEntityList[0].id.toString(),
-          name: pokemonEntityList[0].name.capitalize().removeGender(),
+          id: pokemonEntityList[0].id.toString().fixId(),
+          name: pokemonEntityList[0].name.toUpperCase().removeGender(),
           imageUrl: pokemonEntityList[0].imageUrl,
           height: pokemonEntityList[0].height.toString(),
           weight: pokemonEntityList[0].weight.toString(),
           stats: [
             StatViewModel(
               stat: pokemonEntityList[0].stats[0].stat,
-              name: pokemonEntityList[0].stats[0].name.capitalize(),
+              name: pokemonEntityList[0].stats[0].name.toUpperCase(),
             ),
             StatViewModel(
               stat: pokemonEntityList[0].stats[1].stat,
-              name: pokemonEntityList[0].stats[1].name.capitalize(),
+              name: pokemonEntityList[0].stats[1].name.toUpperCase(),
             ),
           ],
           types: [
-            TypeViewModel(
-              type: pokemonEntityList[0].types[0].type.capitalize(),
-            ),
-            TypeViewModel(
-              type: pokemonEntityList[0].types[1].type.capitalize(),
-            ),
+              pokemonEntityList[0].types[0].type.toUpperCase(),
+               pokemonEntityList[0].types[1].type.toUpperCase(),
+            
           ],
         ),
       ];

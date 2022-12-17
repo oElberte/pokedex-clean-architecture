@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
+import '../../../helpers/helpers.dart';
+import './pokemon_type_grid_item.dart';
 
 class PokemonListGridItem extends StatelessWidget {
   final PokemonViewModel viewModel;
@@ -11,58 +13,55 @@ class PokemonListGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                viewModel.name,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Image.network(
-                viewModel.imageUrl,
-                cacheHeight: 120,
-                cacheWidth: 120,
-                height: 80,
-                width: 80,
-              ),
-            ],
+        color: getPokemonColor(viewModel.types[0]),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.4),
+            blurRadius: 2,
+            offset: Offset(2, 2),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  viewModel.types[0].type,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            viewModel.name,
+            style: const TextStyle(
+              shadows: [
+                Shadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                  blurRadius: 4,
+                  offset: Offset(1, 1),
                 ),
-                if (viewModel.types.length >= 2)
-                  Text(
-                    viewModel.types[1].type,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                Text(
-                  viewModel.id,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                )
               ],
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
             ),
+          ),
+          Image.network(
+            viewModel.imageUrl,
+            cacheHeight: 300,
+            cacheWidth: 300,
+            height: 100,
+            width: 100,
+          ),
+          Text(
+            viewModel.id,
+            style: const TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 0.7),
+              fontSize: 18,
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: viewModel.types
+                .map((type) => PokemonTypeGridItem(type))
+                .toList(),
           ),
         ],
       ),
