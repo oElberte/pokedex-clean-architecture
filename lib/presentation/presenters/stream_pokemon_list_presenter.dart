@@ -7,22 +7,28 @@ import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
 import '../helpers/helpers.dart';
 
-class StreamPokemonPresenter implements PokemonListPresenter {
+class StreamPokemonListPresenter implements PokemonListPresenter {
   final LoadPokemon loadPokemon;
+
+  StreamPokemonListPresenter(this.loadPokemon);
 
   final _controller = StreamController<List<PokemonViewModel>>.broadcast();
 
   @override
   Stream<List<PokemonViewModel>> get pokemonStream => _controller.stream.distinct();
 
-  StreamPokemonPresenter(this.loadPokemon);
+  final List<PokemonViewModel> _list = [];
+
+  String? _nextUrl;
 
   @override
   Future<void> loadData() async {
     try {
-      final pokemonEntity = await loadPokemon.fetch();
+      final pokemonEntity = await loadPokemon.fetch(nextUrl: _nextUrl);
       final pokemonList = pokemonEntity.map((p) => p.toViewModel()).toList();
-      _controller.add(pokemonList);
+      _list.addAll(pokemonList);
+      _controller.add(_list);
+      _nextUrl = pokemonList.last.next;
     } on DomainError catch (e) {
       switch (e) {
         case DomainError.invalidData:
@@ -40,6 +46,7 @@ class StreamPokemonPresenter implements PokemonListPresenter {
 
   @override
   void dispose() {
+    //_list = [];
     _controller.close();
   }
 }

@@ -10,5 +10,5 @@ abstract class LoadPokemon {
     required this.loadDetails,
   });
 
-  Future<List<PokemonEntity>> fetch();
+  Future<List<PokemonEntity>> fetch({String? nextUrl});
 }

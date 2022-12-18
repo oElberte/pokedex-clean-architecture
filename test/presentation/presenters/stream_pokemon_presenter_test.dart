@@ -15,7 +15,7 @@ import 'stream_pokemon_presenter_test.mocks.dart';
 @GenerateNiceMocks([MockSpec<LoadPokemon>()])
 void main() {
   late MockLoadPokemon loadPokemon;
-  late StreamPokemonPresenter sut;
+  late StreamPokemonListPresenter sut;
   late List<PokemonEntity> pokemonEntityList;
 
   List<PokemonEntity> makePokemonEntityList() => [
@@ -68,9 +68,8 @@ void main() {
             ),
           ],
           types: [
-              pokemonEntityList[0].types[0].type.toUpperCase(),
-               pokemonEntityList[0].types[1].type.toUpperCase(),
-            
+            pokemonEntityList[0].types[0].type.toUpperCase(),
+            pokemonEntityList[0].types[1].type.toUpperCase(),
           ],
         ),
       ];
@@ -90,7 +89,7 @@ void main() {
 
   setUp(() {
     loadPokemon = MockLoadPokemon();
-    sut = StreamPokemonPresenter(loadPokemon);
+    sut = StreamPokemonListPresenter(loadPokemon);
     mockLoadData(makePokemonEntityList());
   });
 

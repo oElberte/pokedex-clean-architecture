@@ -44,8 +44,8 @@ class PokemonListGridItem extends StatelessWidget {
           ),
           Image.network(
             viewModel.imageUrl,
-            cacheHeight: 300,
-            cacheWidth: 300,
+            cacheHeight: 200,
+            cacheWidth: 200,
             height: 100,
             width: 100,
           ),

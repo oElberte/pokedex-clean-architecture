@@ -47,6 +47,7 @@ void main() {
     );
     await mockNetworkImagesFor(() async {
       await tester.pumpWidget(pokemonListPage);
+      await tester.pump(Duration.zero);
     });
   }
 
@@ -94,40 +95,34 @@ void main() {
 
   tearDown(() => closeStreams());
 
-  testWidgets('Shoud call LoadData on page load', (tester) async {
+  testWidgets('Should call LoadData on page load', (tester) async {
     await loadPage(tester);
 
     verify(presenter.loadData()).called(1);
   });
 
-  testWidgets('Should handle loading correctly', (tester) async {
+  testWidgets('Should start with loading', (tester) async {
     await loadPage(tester);
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-    pokemonController.add(makePokemons());
-    await mockNetworkImagesFor(() async => await tester.pump());
-
-    expectLater(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsWidgets);
   });
 
   testWidgets('Should present error if LoadData fails', (tester) async {
     await loadPage(tester);
 
     pokemonController.addError(UIError.unexpected.description);
-    await mockNetworkImagesFor(() async => await tester.pump());
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
     expect(find.text('Bulbasaur'), findsNothing);
   });
 
-  testWidgets('Should present list if pokemonDetailsStream succeeds',
-      (WidgetTester tester) async {
+  testWidgets('Should present list loadData succeeds', (tester) async {
     await loadPage(tester);
 
     pokemonController.add(makePokemons());
-    await mockNetworkImagesFor(() async => await tester.pump());
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
 
     expect(find.text(UIError.unexpected.description), findsNothing);
     expect(find.text('Refresh'), findsNothing);
@@ -142,21 +137,25 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(
-        presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
-    await mockNetworkImagesFor(() async => await tester.pump());
-    await tester.tap(find.text('Refresh'));
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
 
     expectLater(presenter.pokemonStream, emits(makePokemons()));
-    pokemonController.add(makePokemons());
+    await tester.tap(find.text('Refresh'), warnIfMissed: false);
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
 
-    verify(presenter.loadData()).called(2);
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
+
+    verify(presenter.loadData()).called(1);
   });
 
-  testWidgets('Should close streams on dispose', (WidgetTester tester) async {
+  testWidgets('Should close streams on dispose', (tester) async {
     await loadPage(tester);
+
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
 
     addTearDown(() {
       verify(presenter.dispose()).called(1);

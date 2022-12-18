@@ -14,9 +14,9 @@ class LoadPokemonListImpl implements LoadPokemonList {
   });
 
   @override
-  Future<PokemonListEntity> fetch() async {
+  Future<PokemonListEntity> fetch({String? nextUrl}) async {
     try {
-      final json = await httpClient.request(url);
+      final json = await httpClient.request(nextUrl ?? url);
       return PokemonListModel.fromJson(json).toEntity();
     } on HttpError catch (e) {
       switch (e) {

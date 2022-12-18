@@ -16,6 +16,12 @@ class PokemonListPage extends StatefulWidget {
 
 class _PokemonListPageState extends State<PokemonListPage> {
   @override
+  void initState() {
+    super.initState();
+    widget.presenter.loadData();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     widget.presenter.dispose();
@@ -23,8 +29,6 @@ class _PokemonListPageState extends State<PokemonListPage> {
 
   @override
   Widget build(BuildContext context) {
-    widget.presenter.loadData();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokédex'),
@@ -33,7 +37,10 @@ class _PokemonListPageState extends State<PokemonListPage> {
         stream: widget.presenter.pokemonStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return showLoading();
+            showLoading(context);
+            if (snapshot.hasData) {
+              return PokemonListItems(snapshot.data!);
+            }
           }
 
           if (snapshot.hasError) {
@@ -44,6 +51,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
           }
 
           if (snapshot.hasData) {
+            hideLoading(context);
             return PokemonListItems(snapshot.data!);
           }
 

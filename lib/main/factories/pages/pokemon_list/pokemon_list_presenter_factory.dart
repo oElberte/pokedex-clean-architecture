@@ -3,7 +3,7 @@ import '../../../../ui/pages/pages.dart';
 import '../../factories.dart';
 
 PokemonListPresenter makePokemonListPresenter() {
-  return StreamPokemonPresenter(
+  return StreamPokemonListPresenter(
     makeLoadPokemon(),
   );
 }

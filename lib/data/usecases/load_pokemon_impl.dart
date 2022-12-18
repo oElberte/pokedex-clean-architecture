@@ -12,11 +12,15 @@ class LoadPokemonImpl implements LoadPokemon {
     required this.loadDetails,
   });
 
+  /*  Since the PokeAPI separes everything of Pokémons,
+      I splitted my use cases to fetch each part of the API separated,
+      and this use case unit the most of them.
+  */
   @override
-  Future<List<PokemonEntity>> fetch() async {
+  Future<List<PokemonEntity>> fetch({String? nextUrl}) async {
     List<PokemonEntity> pokemonList = [];
 
-    final list = await loadList.fetch();
+    final list = await loadList.fetch(nextUrl: nextUrl);
     final urlList = list.results.map((result) => result.url).toList();
     final pokemonDetailsList = await loadDetails.fetch(urlList);
 

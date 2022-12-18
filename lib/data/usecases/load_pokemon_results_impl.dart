@@ -11,6 +11,9 @@ class LoadPokemonResultsImpl implements LoadPokemonResults {
     required this.httpClient,
   });
 
+  /*  This use case is not being used as I'm uniting everything
+      in the LoadPokemonImpl.    
+  */
   @override
   Future<List<PokemonResultEntity>> fetch(List<String> url) async {
     try {

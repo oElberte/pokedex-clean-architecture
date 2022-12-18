@@ -71,10 +71,12 @@ class MockLoadPokemon extends _i1.Mock implements _i2.LoadPokemon {
         ),
       ) as _i2.LoadPokemonDetails);
   @override
-  _i3.Future<List<_i4.PokemonEntity>> fetch() => (super.noSuchMethod(
+  _i3.Future<List<_i4.PokemonEntity>> fetch({String? nextUrl}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetch,
           [],
+          {#nextUrl: nextUrl},
         ),
         returnValue:
             _i3.Future<List<_i4.PokemonEntity>>.value(<_i4.PokemonEntity>[]),
