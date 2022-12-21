@@ -44,8 +44,6 @@ extension StringExtension on String {
       return substring(0, length - 9);
     } else if (toLowerCase().contains('-disguised')) {
       return substring(0, length - 10);
-    } else if (toLowerCase().contains('-o')) {
-      return substring(0, length - 2);
     } else if (toLowerCase().contains('-amped')) {
       return substring(0, length - 6);
     } else if (toLowerCase().contains('-full-bel')) {

@@ -52,10 +52,10 @@ class _PokemonListPageState extends State<PokemonListPage> {
           stream: widget.presenter.pokemonStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<PokemonViewModel> data = snapshot.data!;
+              List<PokemonViewModel> viewModels = snapshot.data!;
               return PokemonList(
                 controller: controller,
-                data: data,
+                viewModels: viewModels,
               );
             }
 

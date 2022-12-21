@@ -27,9 +27,6 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
 
   @override
   Future<void> loadData() async {
-    /* TODO: Check if the user has internet connection
-    Check for duplicated pokemons on list
-    After pokemon 905 the id link changes */
     try {
       _isLoadingController.add(true);
       var length = pokemonList.length;

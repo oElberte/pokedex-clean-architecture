@@ -9,5 +9,5 @@
 6. ✅ Show pokemon details based on template
 7. ✅ Call the fetch Pokemons method on clicking the reload button
 8. ✅ Close Streams on dispose
-8. Show favorite pokemons with a filled heart and non favorite not filled
-9. Go to pokemon details page when clicking on any pokemon
+9. Show favorite pokemons with a filled heart and non favorite not filled
+10. Go to pokemon details page when clicking on any pokemon

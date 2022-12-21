@@ -5,12 +5,12 @@ import 'pokemon_list_item.dart';
 
 class PokemonList extends StatelessWidget {
   final ScrollController controller;
-  final List<PokemonViewModel> data;
+  final List<PokemonViewModel> viewModels;
 
   const PokemonList({
     Key? key,
     required this.controller,
-    required this.data,
+    required this.viewModels,
   }) : super(key: key);
 
   @override
@@ -27,9 +27,9 @@ class PokemonList extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemCount: data.length,
+      itemCount: viewModels.length,
       itemBuilder: (context, index) {
-        return PokemonListItem(data[index]);
+        return PokemonListItem(viewModel: viewModels[index]);
       },
     );
   }
