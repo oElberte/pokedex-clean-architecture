@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class PokemonViewModel extends Equatable {
-  final String? next;
-  final String? previous;
   final String id;
   final String name;
   final String imageUrl;
@@ -12,8 +10,6 @@ class PokemonViewModel extends Equatable {
   final List<String> types;
 
   const PokemonViewModel({
-    this.next,
-    this.previous,
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -25,8 +21,6 @@ class PokemonViewModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        next,
-        previous,
         id,
         name,
         imageUrl,
@@ -48,15 +42,4 @@ class StatViewModel extends Equatable {
   
   @override
   List<Object?> get props => [stat, name];
-}
-
-class TypeViewModel extends Equatable {
-  final String type;
-
-  const TypeViewModel({
-    required this.type,
-  });
-
-   @override
-  List<Object?> get props => [type];
 }

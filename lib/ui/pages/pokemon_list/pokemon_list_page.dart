@@ -15,16 +15,20 @@ class PokemonListPage extends StatefulWidget {
 }
 
 class _PokemonListPageState extends State<PokemonListPage> {
+  final controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.loadData();
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    widget.presenter.dispose();
+    //When the user gets to the end of the page, loads more Pokémon
+    controller.addListener(() {
+      final maxScroll = controller.position.maxScrollExtent;
+      final actualPosition = controller.position.pixels;
+      if (maxScroll == actualPosition) {
+        widget.presenter.loadData();
+      }
+    });
   }
 
   @override
@@ -33,31 +37,41 @@ class _PokemonListPageState extends State<PokemonListPage> {
       appBar: AppBar(
         title: const Text('Pokédex'),
       ),
-      body: StreamBuilder<List<PokemonViewModel>>(
-        stream: widget.presenter.pokemonStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            showLoading(context);
-            if (snapshot.hasData) {
-              return PokemonListItems(snapshot.data!);
-            }
-          }
-
-          if (snapshot.hasError) {
-            return showError(
-              snapshot.error.toString(),
-              onTap: widget.presenter.loadData,
-            );
-          }
-
-          if (snapshot.hasData) {
+      body: Builder(builder: (context) {
+        widget.presenter.isLoadingStream.listen((isLoading) async {
+          if (isLoading) {
+            await showLoading(context);
+          } else {
             hideLoading(context);
-            return PokemonListItems(snapshot.data!);
           }
+        });
 
-          return const SizedBox();
-        },
-      ),
+        widget.presenter.loadData();
+
+        return StreamBuilder<List<PokemonViewModel>>(
+          stream: widget.presenter.pokemonStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<PokemonViewModel> data = snapshot.data!;
+              return PokemonList(
+                controller: controller,
+                data: data,
+              );
+            }
+
+            if (snapshot.hasError) {
+              return ErrorPage(
+                error: snapshot.error,
+                onTap: () => setState(() {
+                  widget.presenter.loadData();
+                }),
+              );
+            }
+
+            return const SizedBox();
+          },
+        );
+      }),
     );
   }
 }

@@ -1,222 +1,174 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:pokedex/data/http/http.dart';
 import 'package:pokedex/data/usecases/usecases.dart';
 
 import 'package:pokedex/domain/entities/entities.dart';
 import 'package:pokedex/domain/helpers/helpers.dart';
 
-import 'mocks/load_pokemon_details.mocks.dart';
-import 'mocks/load_pokemon_list.mocks.dart';
+import 'load_pokemon_impl_test.mocks.dart';
 
+@GenerateNiceMocks([MockSpec<HttpClient>()])
 void main() {
-  late MockLoadPokemonList loadList;
-  late MockLoadPokemonDetails loadDetails;
+  late String url;
+  late MockHttpClient httpClient;
   late LoadPokemonImpl sut;
-  late PokemonListEntity pokemonListData;
-  late List<PokemonDetailsEntity> pokemonDetailsData;
+  late Map pokemonData;
 
-  PokemonListEntity mockListValidData() => PokemonListEntity(
-        next: faker.internet.httpUrl(),
-        previous: null,
-        results: [
-          PokemonResultEntity(
-            name: faker.animal.name(),
-            url: faker.internet.httpUrl(),
-          ),
+  Map mockDataWithoutId() => {
+        "name": "bulbasaur",
+        "sprites": {
+          "other": {
+            "official-artwork": {
+              "front_default":
+                  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+            },
+          },
+        },
+      };
+
+  Map mockDataWithoutImage() => {
+        "id": 1,
+        "name": "bulbasaur",
+      };
+
+  Map mockValidData() => {
+        "id": 1,
+        "name": "bulbasaur",
+        "sprites": {
+          "other": {
+            "official-artwork": {
+              "front_default":
+                  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+            },
+          },
+        },
+        "height": 7,
+        "weight": 69,
+        "stats": [
+          {
+            "base_stat": 45,
+            "effort": 0,
+            "stat": {
+              "name": "hp",
+              "url": "https://pokeapi.co/api/v2/stat/1/",
+            }
+          },
+          {
+            "base_stat": 49,
+            "effort": 0,
+            "stat": {
+              "name": "attack",
+              "url": "https://pokeapi.co/api/v2/stat/2/",
+            }
+          },
         ],
-      );
+        "types": [
+          {
+            "slot": 1,
+            "type": {
+              "name": "grass",
+              "url": "https://pokeapi.co/api/v2/type/12/",
+            }
+          },
+          {
+            "slot": 2,
+            "type": {
+              "name": "poison",
+              "url": "https://pokeapi.co/api/v2/type/4/",
+            }
+          },
+        ],
+      };
 
-  List<PokemonDetailsEntity> mockDetailsValidData() => [
-        PokemonDetailsEntity(
-          id: faker.randomGenerator.integer(1000),
-          name: faker.animal.name(),
-          imageUrl: faker.internet.httpUrl(),
-          height: faker.randomGenerator.integer(100),
-          weight: faker.randomGenerator.integer(100),
-          stats: [
-            StatEntity(
-              stat: faker.randomGenerator.integer(100),
-              name: faker.randomGenerator.string(10),
-            ),
-            StatEntity(
-              stat: faker.randomGenerator.integer(100),
-              name: faker.randomGenerator.string(10),
-            ),
-          ],
-          types: [
-            TypeEntity(
-              type: faker.randomGenerator.string(10),
-            ),
-            TypeEntity(
-              type: faker.randomGenerator.string(10),
-            ),
-          ],
-        ),
-        PokemonDetailsEntity(
-          id: faker.randomGenerator.integer(1000),
-          name: faker.animal.name(),
-          imageUrl: faker.internet.httpUrl(),
-          height: faker.randomGenerator.integer(100),
-          weight: faker.randomGenerator.integer(100),
-          stats: [
-            StatEntity(
-              stat: faker.randomGenerator.integer(100),
-              name: faker.randomGenerator.string(10),
-            ),
-            StatEntity(
-              stat: faker.randomGenerator.integer(100),
-              name: faker.randomGenerator.string(10),
-            ),
-          ],
-          types: [
-            TypeEntity(
-              type: faker.randomGenerator.string(10),
-            ),
-            TypeEntity(
-              type: faker.randomGenerator.string(10),
-            ),
-          ],
-        ),
-      ];
+  PostExpectation mockRequest() => when(httpClient.request(any));
 
-  PostExpectation mockLoadListRequest() => when(loadList.fetch());
+  void mockHttpError(HttpError error) => mockRequest().thenThrow(error);
 
-  PostExpectation mockLoadDetailsRequest() => when(loadDetails.fetch(any));
-
-  void mockListError(DomainError error) =>
-      mockLoadListRequest().thenThrow(error);
-
-  void mockDetailsError(DomainError error) =>
-      mockLoadDetailsRequest().thenThrow(error);
-
-  void mockListData(PokemonListEntity data) {
-    pokemonListData = data;
-    mockLoadListRequest().thenAnswer((_) async => data);
-  }
-
-  void mockDetailsData(List<PokemonDetailsEntity> data) {
-    pokemonDetailsData = data;
-    mockLoadDetailsRequest().thenAnswer((_) async => data);
+  void mockHttpData(Map data) {
+    pokemonData = data;
+    mockRequest().thenAnswer((_) async => data);
   }
 
   setUp(() {
-    loadList = MockLoadPokemonList();
-    loadDetails = MockLoadPokemonDetails();
-    sut = LoadPokemonImpl(
-      loadList: loadList,
-      loadDetails: loadDetails,
-    );
-    mockListData(mockListValidData());
-    mockDetailsData(mockDetailsValidData());
+    url = faker.internet.httpUrl();
+    httpClient = MockHttpClient();
+    sut = LoadPokemonImpl(httpClient: httpClient);
+    mockHttpData(mockValidData());
   });
 
-  test('Shoud call LoadList and LoadDetails on fetch', () async {
-    await sut.fetch();
+  test('Shoud call HttpClient on fetch', () async {
+    await sut.fetch(url);
 
-    verify(loadList.fetch()).called(1);
-    verify(loadDetails.fetch(any)).called(1);
+    verify(httpClient.request(any)).called(1);
   });
 
-  test('Should rethrow if LoadList or LoadDetails throw BadRequest', () async {
-    mockListError(DomainError.badRequest);
-    final future = sut.fetch();
+  test('Should throw BadRequestError if HttpClient returns 400', () async {
+    mockHttpError(HttpError.badRequest);
+
+    final future = sut.fetch(url);
+
     expect(future, throwsA(DomainError.badRequest));
-
-    mockDetailsError(DomainError.badRequest);
-    final future2 = sut.fetch();
-    expect(future2, throwsA(DomainError.badRequest));
   });
 
-  test('Should rethrow if LoadList or LoadDetails throw InvalidData', () async {
-    mockListError(DomainError.invalidData);
-    final future = sut.fetch();
-    expect(future, throwsA(DomainError.invalidData));
+  test('Should throw UnexpectedError if HttpClient returns 404', () async {
+    mockHttpError(HttpError.notFound);
 
-    mockDetailsError(DomainError.invalidData);
-    final future2 = sut.fetch();
-    expect(future2, throwsA(DomainError.invalidData));
-  });
+    final future = sut.fetch(url);
 
-  test('Should rethrow if LoadList or LoadDetails throw Unexpected', () async {
-    mockListError(DomainError.unexpected);
-    final future = sut.fetch();
     expect(future, throwsA(DomainError.unexpected));
-
-    mockDetailsError(DomainError.unexpected);
-    final future2 = sut.fetch();
-    expect(future2, throwsA(DomainError.unexpected));
   });
 
-  test('Should rethrow if LoadList or LoadDetails throw InvalidData', () async {
-    mockListError(DomainError.invalidData);
-    final future = sut.fetch();
+  test('Should throw UnexpectedError if HttpClient returns 500', () async {
+    mockHttpError(HttpError.serverError);
+
+    final future = sut.fetch(url);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test(
+      'Should throw InvalidDataError if HttpClient returns 200 with invalid data',
+      () async {
+    mockHttpData(mockDataWithoutId());
+    final future = sut.fetch(url);
     expect(future, throwsA(DomainError.invalidData));
 
-    mockDetailsError(DomainError.invalidData);
-    final future2 = sut.fetch();
+    mockHttpData(mockDataWithoutImage());
+    final future2 = sut.fetch(url);
     expect(future2, throwsA(DomainError.invalidData));
   });
 
   test('Should return PokemonDetails on 200', () async {
-    final result = await sut.fetch();
+    final result = await sut.fetch(url);
 
-    expect(result, [
+    expect(
+      result,
       PokemonEntity(
-        next: pokemonListData.next,
-        previous: pokemonListData.previous,
-        id: pokemonDetailsData[0].id,
-        name: pokemonDetailsData[0].name,
-        imageUrl: pokemonDetailsData[0].imageUrl,
-        height: pokemonDetailsData[0].height,
-        weight: pokemonDetailsData[0].weight,
+        id: pokemonData['id'],
+        name: pokemonData['name'],
+        imageUrl: pokemonData['sprites']['other']['official-artwork']
+            ['front_default'],
+        height: pokemonData['height'],
+        weight: pokemonData['weight'],
         stats: [
           StatEntity(
-            stat: pokemonDetailsData[0].stats[0].stat,
-            name: pokemonDetailsData[0].stats[0].name,
+            stat: pokemonData['stats'][0]['base_stat'],
+            name: pokemonData['stats'][0]['stat']['name'],
           ),
           StatEntity(
-            stat: pokemonDetailsData[0].stats[1].stat,
-            name: pokemonDetailsData[0].stats[1].name,
+            stat: pokemonData['stats'][1]['base_stat'],
+            name: pokemonData['stats'][1]['stat']['name'],
           ),
         ],
         types: [
-          TypeEntity(
-            type: pokemonDetailsData[0].types[0].type,
-          ),
-          TypeEntity(
-            type: pokemonDetailsData[0].types[1].type,
-          ),
+          pokemonData['types'][0]['type']['name'],
+          pokemonData['types'][1]['type']['name']
         ],
       ),
-      PokemonEntity(
-        next: pokemonListData.next,
-        previous: pokemonListData.previous,
-        id: pokemonDetailsData[1].id,
-        name: pokemonDetailsData[1].name,
-        imageUrl: pokemonDetailsData[1].imageUrl,
-        height: pokemonDetailsData[1].height,
-        weight: pokemonDetailsData[1].weight,
-        stats: [
-          StatEntity(
-            stat: pokemonDetailsData[1].stats[0].stat,
-            name: pokemonDetailsData[1].stats[0].name,
-          ),
-          StatEntity(
-            stat: pokemonDetailsData[1].stats[1].stat,
-            name: pokemonDetailsData[1].stats[1].name,
-          ),
-        ],
-        types: [
-          TypeEntity(
-            type: pokemonDetailsData[1].types[0].type,
-          ),
-          TypeEntity(
-            type: pokemonDetailsData[1].types[1].type,
-          ),
-        ],
-      ),
-    ]);
+    );
   });
 }

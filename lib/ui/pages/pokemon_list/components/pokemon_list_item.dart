@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
 import '../../../helpers/helpers.dart';
-import './pokemon_type_grid_item.dart';
+import 'pokemon_list_type_item.dart';
 
-class PokemonListGridItem extends StatelessWidget {
+class PokemonListItem extends StatelessWidget {
   final PokemonViewModel viewModel;
 
-  const PokemonListGridItem(this.viewModel, {Key? key}) : super(key: key);
+  const PokemonListItem(this.viewModel, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class PokemonListGridItem extends StatelessWidget {
           ),
           Image.network(
             viewModel.imageUrl,
-            cacheHeight: 200,
-            cacheWidth: 200,
+            cacheHeight: 150,
+            cacheWidth: 150,
             height: 100,
             width: 100,
           ),
@@ -60,7 +60,7 @@ class PokemonListGridItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: viewModel.types
-                .map((type) => PokemonTypeGridItem(type))
+                .map((type) => PokemonListTypeItem(type))
                 .toList(),
           ),
         ],

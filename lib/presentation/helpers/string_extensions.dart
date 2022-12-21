@@ -3,9 +3,55 @@ extension StringExtension on String {
     return '${this[0].toUpperCase()}${substring(1)}';
   }
 
-  String removeGender() {
-    if (contains('-m') || contains('-f')) {
+  String removeAdditional() {
+    if (toLowerCase().contains('-m') || toLowerCase().contains('-f')) {
       return substring(0, length - 2);
+    } else if (toLowerCase().contains('-normal')) {
+      return substring(0, length - 7);
+    } else if (toLowerCase().contains('-plant')) {
+      return substring(0, length - 6);
+    } else if (toLowerCase().contains('-z')) {
+      return substring(0, length - 2);
+    } else if (toLowerCase().contains('-altered')) {
+      return substring(0, length - 8);
+    } else if (toLowerCase().contains('-land')) {
+      return substring(0, length - 5);
+    } else if (toLowerCase().contains('-red-striped')) {
+      return substring(0, length - 12);
+    } else if (toLowerCase().contains('-standard')) {
+      return substring(0, length - 9);
+    } else if (toLowerCase().contains('-incarnate')) {
+      return substring(0, length - 10);
+    } else if (toLowerCase().contains('-ordinary')) {
+      return substring(0, length - 9);
+    } else if (toLowerCase().contains('-aria')) {
+      return substring(0, length - 5);
+    } else if (toLowerCase().contains('-ma')) {
+      return substring(0, length - 3);
+    } else if (toLowerCase().contains('-shield')) {
+      return substring(0, length - 7);
+    } else if (toLowerCase().contains('-average')) {
+      return substring(0, length - 8);
+    } else if (toLowerCase().contains('-50')) {
+      return substring(0, length - 3);
+    } else if (toLowerCase().contains('-solo')) {
+      return substring(0, length - 5);
+    } else if (toLowerCase().contains('-midd')) {
+      return substring(0, length - 5);
+    } else if (toLowerCase().contains('-null')) {
+      return substring(0, length - 5);
+    } else if (toLowerCase().contains('-red-mete')) {
+      return substring(0, length - 9);
+    } else if (toLowerCase().contains('-disguised')) {
+      return substring(0, length - 10);
+    } else if (toLowerCase().contains('-o')) {
+      return substring(0, length - 2);
+    } else if (toLowerCase().contains('-amped')) {
+      return substring(0, length - 6);
+    } else if (toLowerCase().contains('-full-bel')) {
+      return substring(0, length - 9);
+    } else if (toLowerCase().contains('-single-strike')) {
+      return substring(0, length - 14);
     }
     return this;
   }

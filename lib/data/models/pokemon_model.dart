@@ -1,16 +1,16 @@
 import '../../domain/entities/entities.dart';
 import '../http/http.dart';
 
-class PokemonDetailsModel {
+class PokemonModel {
   final int id;
   final String name;
   final String imageUrl;
   final int height;
   final int weight;
   final List<StatModel> stats;
-  final List<TypeModel> types;
+  final List<String> types;
 
-  const PokemonDetailsModel({
+  const PokemonModel({
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -20,12 +20,12 @@ class PokemonDetailsModel {
     required this.types,
   });
 
-  factory PokemonDetailsModel.fromJson(Map json) {
-    if (!json.keys.toSet().containsAll(['id', 'name', 'sprites'])) {
+  factory PokemonModel.fromJson(Map json) {
+    if (!json.keys.toSet().containsAll(['id', 'name', 'sprites', 'types'])) {
       throw HttpError.invalidData;
     }
 
-    return PokemonDetailsModel(
+    return PokemonModel(
       id: json['id'],
       name: json['name'],
       imageUrl: json['sprites']['other']['official-artwork']['front_default'],
@@ -34,21 +34,19 @@ class PokemonDetailsModel {
       stats: json['stats']
           .map<StatModel>((answer) => StatModel.fromJson(answer))
           .toList(),
-      types: json['types']
-          .map<TypeModel>((answer) => TypeModel.fromJson(answer))
-          .toList(),
+      types: json['types'].map<String>((answer) => answer['type']['name'].toString()).toList(),
     );
   }
 
-  PokemonDetailsEntity toEntity() {
-    return PokemonDetailsEntity(
+  PokemonEntity toEntity() {
+    return PokemonEntity(
       id: id,
       name: name,
       imageUrl: imageUrl,
       height: height,
       weight: weight,
       stats: stats.map<StatEntity>((answer) => answer.toEntity()).toList(),
-      types: types.map<TypeEntity>((answer) => answer.toEntity()).toList(),
+      types: types,
     );
   }
 }
@@ -73,26 +71,6 @@ class StatModel {
     return StatEntity(
       stat: stat,
       name: name,
-    );
-  }
-}
-
-class TypeModel {
-  final String type;
-
-  const TypeModel({
-    required this.type,
-  });
-
-  factory TypeModel.fromJson(Map json) {
-    return TypeModel(
-      type: json['type']['name'],
-    );
-  }
-
-  TypeEntity toEntity() {
-    return TypeEntity(
-      type: type,
     );
   }
 }

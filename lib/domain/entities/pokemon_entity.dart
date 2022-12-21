@@ -1,21 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-import 'pokemon_details_entity.dart';
-
 class PokemonEntity extends Equatable {
-  final String? next;
-  final String? previous;
   final int id;
   final String name;
   final String imageUrl;
   final int height;
   final int weight;
   final List<StatEntity> stats;
-  final List<TypeEntity> types;
+  final List<String> types;
 
   const PokemonEntity({
-    this.next,
-    this.previous,
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -26,15 +20,18 @@ class PokemonEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        next,
-        previous,
-        id,
-        name,
-        imageUrl,
-        height,
-        weight,
-        stats,
-        types,
-      ];
+  List<Object?> get props => [id, name, height, weight, stats, types];
+}
+
+class StatEntity extends Equatable {
+  final int stat;
+  final String name;
+
+  const StatEntity({
+    required this.stat,
+    required this.name,
+  });
+
+  @override
+  List<Object?> get props => [stat, name];
 }

@@ -15,7 +15,7 @@ class HttpAdapter implements HttpClient {
 
     try {
       final uri = Uri.parse(url);
-      response = await client.get(uri).timeout(const Duration(seconds: 10));
+      response = await client.get(uri).timeout(const Duration(seconds: 5));
     } catch (e) {
       throw HttpError.serverError;
     }

@@ -6,10 +6,8 @@ import '../../ui/components/components.dart';
 extension PokemonEntityExtensions on PokemonEntity {
   PokemonViewModel toViewModel() {
     return PokemonViewModel(
-      next: next,
-      previous: previous,
       id: id.toString().fixId(),
-      name: name.toUpperCase().removeGender(),
+      name: name.toUpperCase().removeAdditional(),
       imageUrl: imageUrl,
       height: height.toString(),
       weight: weight.toString(),
@@ -19,7 +17,7 @@ extension PokemonEntityExtensions on PokemonEntity {
                 name: e.name.toUpperCase(),
               ))
           .toList(),
-      types: types.map((e) => e.type.toUpperCase()).toList(),
+      types: types.map((e) => e.toUpperCase()).toList(),
     );
   }
 }

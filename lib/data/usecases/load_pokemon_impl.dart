@@ -1,44 +1,29 @@
-import '../../domain/entities/pokemon_entity.dart';
-import '../../domain/usecases/usecases.dart';
+import '../../domain/entities/entities.dart';
+import '../../domain/helpers/helpers.dart';
+import '../../domain/usecases/load_pokemon.dart';
+import '../http/http.dart';
+import '../models/models.dart';
 
 class LoadPokemonImpl implements LoadPokemon {
+  final HttpClient httpClient;
+
+  LoadPokemonImpl({required this.httpClient});
+
   @override
-  final LoadPokemonList loadList;
-  @override
-  final LoadPokemonDetails loadDetails;
-
-  LoadPokemonImpl({
-    required this.loadList,
-    required this.loadDetails,
-  });
-
-  /*  Since the PokeAPI separes everything of Pokémons,
-      I splitted my use cases to fetch each part of the API separated,
-      and this use case unit the most of them.
-  */
-  @override
-  Future<List<PokemonEntity>> fetch({String? nextUrl}) async {
-    List<PokemonEntity> pokemonList = [];
-
-    final list = await loadList.fetch(nextUrl: nextUrl);
-    final urlList = list.results.map((result) => result.url).toList();
-    final pokemonDetailsList = await loadDetails.fetch(urlList);
-
-    for (var pokemon in pokemonDetailsList) {
-      final entity = PokemonEntity(
-        next: list.next,
-        previous: list.previous,
-        id: pokemon.id,
-        name: pokemon.name,
-        imageUrl: pokemon.imageUrl,
-        height: pokemon.height,
-        weight: pokemon.weight,
-        stats: pokemon.stats,
-        types: pokemon.types,
-      );
-      pokemonList.add(entity);
+  Future<PokemonEntity> fetch(String id) async {
+    try {
+      final url = 'https://pokeapi.co/api/v2/pokemon/$id/';
+      final json = await httpClient.request(url);
+      return PokemonModel.fromJson(json).toEntity();
+    } on HttpError catch (e) {
+      switch (e) {
+        case HttpError.badRequest:
+          throw DomainError.badRequest;
+        case HttpError.invalidData:
+          throw DomainError.invalidData;
+        default:
+          throw DomainError.unexpected;
+      }
     }
-
-    return pokemonList;
   }
 }

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
-import './pokemon_list_grid_item.dart';
+import 'pokemon_list_item.dart';
 
-class PokemonListItems extends StatelessWidget {
+class PokemonList extends StatelessWidget {
+  final ScrollController controller;
   final List<PokemonViewModel> data;
 
-  const PokemonListItems(this.data, {Key? key}) : super(key: key);
+  const PokemonList({
+    Key? key,
+    required this.controller,
+    required this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      controller: controller,
       padding: const EdgeInsets.symmetric(
         vertical: 10,
         horizontal: 10,
@@ -22,7 +28,9 @@ class PokemonListItems extends StatelessWidget {
         mainAxisSpacing: 10,
       ),
       itemCount: data.length,
-      itemBuilder: (context, index) => PokemonListGridItem(data[index]),
+      itemBuilder: (context, index) {
+        return PokemonListItem(data[index]);
+      },
     );
   }
 }

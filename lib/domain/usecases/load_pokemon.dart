@@ -1,14 +1,5 @@
-import '../entities/pokemon_entity.dart';
-import 'usecases.dart';
+import '../entities/entities.dart';
 
 abstract class LoadPokemon {
-  final LoadPokemonList loadList;
-  final LoadPokemonDetails loadDetails;
-
-  LoadPokemon({
-    required this.loadList,
-    required this.loadDetails,
-  });
-
-  Future<List<PokemonEntity>> fetch({String? nextUrl});
+  Future<PokemonEntity> fetch(String id);
 }

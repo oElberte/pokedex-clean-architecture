@@ -12,41 +12,56 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
 
   StreamPokemonListPresenter(this.loadPokemon);
 
-  final _controller = StreamController<List<PokemonViewModel>>.broadcast();
+  final _pokemonController =
+      StreamController<List<PokemonViewModel>>.broadcast();
+  final _isLoadingController = StreamController<bool>.broadcast();
 
   @override
-  Stream<List<PokemonViewModel>> get pokemonStream => _controller.stream.distinct();
+  Stream<List<PokemonViewModel>> get pokemonStream => _pokemonController.stream;
 
-  final List<PokemonViewModel> _list = [];
+  @override
+  Stream<bool> get isLoadingStream => _isLoadingController.stream.distinct();
 
-  String? _nextUrl;
+  List<PokemonViewModel> pokemonList = [];
+  bool isLoading = false;
 
   @override
   Future<void> loadData() async {
+    /* TODO: Check if the user has internet connection
+    Check for duplicated pokemons on list
+    After pokemon 905 the id link changes */
     try {
-      final pokemonEntity = await loadPokemon.fetch(nextUrl: _nextUrl);
-      final pokemonList = pokemonEntity.map((p) => p.toViewModel()).toList();
-      _list.addAll(pokemonList);
-      _controller.add(_list);
-      _nextUrl = pokemonList.last.next;
+      _isLoadingController.add(true);
+      var length = pokemonList.length;
+      for (int id = length + 1; id < length + 51; id++) {
+        final pokemonEntity = await loadPokemon.fetch(id.toString());
+        final pokemon = pokemonEntity.toViewModel();
+        pokemonList.add(pokemon);
+      }
+      _pokemonController.add(pokemonList);
     } on DomainError catch (e) {
       switch (e) {
         case DomainError.invalidData:
-          _controller.addError(UIError.invalidData.description);
+          _pokemonController.addError(UIError.invalidData.description);
+          pokemonList.clear();
           break;
         case DomainError.badRequest:
-          _controller.addError(UIError.badRequest.description);
+          _pokemonController.addError(UIError.badRequest.description);
+          pokemonList.clear();
           break;
         default:
-          _controller.addError(UIError.unexpected.description);
+          _pokemonController.addError(UIError.unexpected.description);
+          pokemonList.clear();
           break;
       }
+    } finally {
+      _isLoadingController.add(false);
     }
   }
 
   @override
   void dispose() {
-    //_list = [];
-    _controller.close();
+    _pokemonController.close();
+    _isLoadingController.close();
   }
 }

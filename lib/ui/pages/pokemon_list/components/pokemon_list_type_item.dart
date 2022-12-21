@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PokemonTypeGridItem extends StatelessWidget {
+class PokemonListTypeItem extends StatelessWidget {
   final String type;
 
-  const PokemonTypeGridItem(
+  const PokemonListTypeItem(
     this.type, {
     Key? key,
   }) : super(key: key);

@@ -12,7 +12,7 @@ extension UIErrorExtension on UIError {
       case UIError.invalidData:
         return 'Something wrong happened. Try refresh the app.';
       default:
-        return 'Something wrong happened. Try again later or refresh the app.';
+        return 'Something wrong happened. Refresh the app or try again later.';
     }
   }
 }
