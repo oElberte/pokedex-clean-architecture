@@ -194,4 +194,19 @@ void main() {
 
     expect(find.text('fake_page'), findsOneWidget);
   });
+
+  testWidgets('Should not change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    navigateToController.add('');
+    await mockNetworkImagesFor(() async => await tester.pump());
+    expect(find.text('Bulbasaur'), findsOneWidget);
+
+    navigateToController.add(null);
+    await mockNetworkImagesFor(() async => await tester.pump());
+    expect(find.text('Bulbasaur'), findsOneWidget);
+  });
 }
