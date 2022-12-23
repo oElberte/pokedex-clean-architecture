@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../ui/pages/pages.dart';
 import 'factories/factories.dart';
 
 void main() {
@@ -18,6 +19,9 @@ class App extends StatelessWidget {
       routes: {
         '/': (context) {
           return makePokemonListPage();
+        },
+        '/pokemon_details': (context) {
+          return const PokemonDetailsPage();
         },
       },
     );
