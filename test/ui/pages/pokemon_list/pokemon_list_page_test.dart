@@ -18,7 +18,6 @@ void main() {
   late StreamController<List<PokemonViewModel>> pokemonController;
   late StreamController<bool> isLoadingController;
   late StreamController<String?> navigateToController;
-  late String currentRoute;
 
   void initStreams() {
     pokemonController = StreamController<List<PokemonViewModel>>.broadcast();

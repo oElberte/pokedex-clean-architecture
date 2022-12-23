@@ -8,12 +8,14 @@ class PokemonList extends StatelessWidget {
   final ScrollController controller;
   final List<PokemonViewModel> viewModels;
   final PokemonListPresenter presenter;
+  final void Function(int) indexCallback;
 
   const PokemonList({
     Key? key,
     required this.controller,
     required this.viewModels,
     required this.presenter,
+    required this.indexCallback,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,10 @@ class PokemonList extends StatelessWidget {
       itemCount: viewModels.length,
       itemBuilder: (context, index) {
         return InkWell(
-          onTap: presenter.goToDetails,
+          onTap: () {
+            indexCallback(index);
+            presenter.goToDetails();
+          },
           child: PokemonListItem(viewModel: viewModels[index]),
         );
       },

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../components/components.dart';
 import '../pages.dart';
 import './components/components.dart';
-import './pokemon_list_presenter.dart';
 
 class PokemonListPage extends StatefulWidget {
   final PokemonListPresenter presenter;
@@ -33,6 +32,9 @@ class _PokemonListPageState extends State<PokemonListPage> {
 
   @override
   Widget build(BuildContext context) {
+    late int argsIndex;
+    late List<PokemonViewModel> argsViewModels;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokédex'),
@@ -50,7 +52,14 @@ class _PokemonListPageState extends State<PokemonListPage> {
           widget.presenter.navigateToStream.listen((page) {
             if (page != null && page.isNotEmpty) {
               if (page == '/pokemon_details') {
-                Navigator.pushNamed(context, page, /* arguments: , */);
+                Navigator.pushNamed(
+                  context,
+                  page,
+                  arguments: PokemonDetailsArguments(
+                    index: argsIndex,
+                    viewModels: argsViewModels,
+                  ),
+                );
               } else {
                 Navigator.pushNamed(context, page);
               }
@@ -64,10 +73,13 @@ class _PokemonListPageState extends State<PokemonListPage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<PokemonViewModel> viewModels = snapshot.data!;
+                argsViewModels = viewModels;
+
                 return PokemonList(
                   controller: controller,
                   viewModels: viewModels,
                   presenter: widget.presenter,
+                  indexCallback: (index) => argsIndex = index,
                 );
               }
 

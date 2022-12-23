@@ -23,7 +23,7 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   Stream<bool> get isLoadingStream => _isLoadingController.stream.distinct();
 
   @override
-  Stream<String?> get navigateToStream => _navigateToController.stream.distinct();
+  Stream<String?> get navigateToStream => _navigateToController.stream;
 
   List<PokemonViewModel> pokemonList = [];
 
