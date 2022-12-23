@@ -7,7 +7,10 @@ import 'pokemon_list_type_item.dart';
 class PokemonListItem extends StatelessWidget {
   final PokemonViewModel viewModel;
 
-  const PokemonListItem({required this.viewModel, Key? key}) : super(key: key);
+  const PokemonListItem({
+    required this.viewModel,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

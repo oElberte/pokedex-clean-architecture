@@ -37,41 +37,43 @@ class _PokemonListPageState extends State<PokemonListPage> {
       appBar: AppBar(
         title: const Text('Pokédex'),
       ),
-      body: Builder(builder: (context) {
-        widget.presenter.isLoadingStream.listen((isLoading) async {
-          if (isLoading) {
-            await showLoading(context);
-          } else {
-            hideLoading(context);
-          }
-        });
-
-        widget.presenter.loadData();
-
-        return StreamBuilder<List<PokemonViewModel>>(
-          stream: widget.presenter.pokemonStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<PokemonViewModel> viewModels = snapshot.data!;
-              return PokemonList(
-                controller: controller,
-                viewModels: viewModels,
-              );
+      body: Builder(
+        builder: (context) {
+          widget.presenter.isLoadingStream.listen((isLoading) async {
+            if (isLoading) {
+              await showLoading(context);
+            } else {
+              hideLoading(context);
             }
+          });
 
-            if (snapshot.hasError) {
-              return ErrorPage(
-                error: snapshot.error,
-                onTap: () => setState(() {
-                  widget.presenter.loadData();
-                }),
-              );
-            }
+          widget.presenter.loadData();
 
-            return const SizedBox();
-          },
-        );
-      }),
+          return StreamBuilder<List<PokemonViewModel>>(
+            stream: widget.presenter.pokemonStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<PokemonViewModel> viewModels = snapshot.data!;
+                return PokemonList(
+                  controller: controller,
+                  viewModels: viewModels,
+                );
+              }
+
+              if (snapshot.hasError) {
+                return ErrorPage(
+                  error: snapshot.error,
+                  onTap: () => setState(() {
+                    widget.presenter.loadData();
+                  }),
+                );
+              }
+
+              return const SizedBox();
+            },
+          );
+        },
+      ),
     );
   }
 }

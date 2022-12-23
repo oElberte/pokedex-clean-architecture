@@ -10,4 +10,4 @@
 7. ✅ Notify pokemonStream with a Pokemon list if loadData succeeds
 8. ✅ Notify pokemonStream with error if loadData returns error
 9. Add Pokémon to favorites on favorite button pressed
-10. Take the user to the Pokemon Details Page when clicking in a Pokemon
+10. ✅ Take the user to other pages when clicking in a button

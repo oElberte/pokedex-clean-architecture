@@ -12,9 +12,9 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
 
   StreamPokemonListPresenter(this.loadPokemon);
 
-  final _pokemonController =
-      StreamController<List<PokemonViewModel>>.broadcast();
+  final _pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
   final _isLoadingController = StreamController<bool>.broadcast();
+  final _navigateToController = StreamController<String?>.broadcast();
 
   @override
   Stream<List<PokemonViewModel>> get pokemonStream => _pokemonController.stream;
@@ -22,8 +22,10 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   @override
   Stream<bool> get isLoadingStream => _isLoadingController.stream.distinct();
 
+  @override
+  Stream<String?> get navigateToStream => _navigateToController.stream.distinct();
+
   List<PokemonViewModel> pokemonList = [];
-  bool isLoading = false;
 
   @override
   Future<void> loadData() async {
@@ -32,8 +34,8 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
       var length = pokemonList.length;
       for (int id = length + 1; id < length + 51; id++) {
         final pokemonEntity = await loadPokemon.fetch(id.toString());
-        final pokemon = pokemonEntity.toViewModel();
-        pokemonList.add(pokemon);
+        final pokemonViewModel = pokemonEntity.toViewModel();
+        pokemonList.add(pokemonViewModel);
       }
       _pokemonController.add(pokemonList);
     } on DomainError catch (e) {
@@ -54,6 +56,11 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
     } finally {
       _isLoadingController.add(false);
     }
+  }
+
+  @override
+  void navigateTo(String page) {
+    _navigateToController.add('/$page');
   }
 
   @override

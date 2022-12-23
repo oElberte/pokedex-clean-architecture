@@ -97,6 +97,7 @@ void main() {
   test('Should emit correct events on UnexpectedError', () async {
     mockLoadDataError(DomainError.unexpected);
 
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.pokemonStream, emitsError(UIError.unexpected.description));
 
     await sut.loadData();
@@ -105,6 +106,7 @@ void main() {
   test('Should emit correct events on InvalidData', () async {
     mockLoadDataError(DomainError.invalidData);
 
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.pokemonStream, emitsError(UIError.invalidData.description));
 
     await sut.loadData();
@@ -113,8 +115,16 @@ void main() {
   test('Should emit correct events on BadRequest', () async {
     mockLoadDataError(DomainError.badRequest);
 
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.pokemonStream, emitsError(UIError.badRequest.description));
 
     await sut.loadData();
+  });
+
+  test('Should go to page on click', () async {
+    expectLater(sut.navigateToStream, emitsInOrder(['/any_route', '/pokemon_details']));
+
+    sut.navigateTo('any_route');
+    sut.navigateTo('pokemon_details');
   });
 }
