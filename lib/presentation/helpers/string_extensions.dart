@@ -40,8 +40,8 @@ extension StringExtension on String {
       return substring(0, length - 5);
     } else if (toLowerCase().contains('-null')) {
       return substring(0, length - 5);
-    } else if (toLowerCase().contains('-red-mete')) {
-      return substring(0, length - 9);
+    } else if (toLowerCase().contains('-red-meteor')) {
+      return substring(0, length - 11);
     } else if (toLowerCase().contains('-disguised')) {
       return substring(0, length - 10);
     } else if (toLowerCase().contains('-amped')) {

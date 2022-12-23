@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatelessWidget {
-  final Object? error;
+  final String error;
   final VoidCallback onTap;
 
   const ErrorPage({
@@ -19,7 +19,7 @@ class ErrorPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              error.toString(),
+              error,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 20,

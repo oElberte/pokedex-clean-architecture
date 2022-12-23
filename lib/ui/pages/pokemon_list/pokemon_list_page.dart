@@ -4,36 +4,24 @@ import '../../components/components.dart';
 import '../pages.dart';
 import './components/components.dart';
 
-class PokemonListPage extends StatefulWidget {
+class PokemonListPage extends StatelessWidget {
   final PokemonListPresenter presenter;
 
   const PokemonListPage(this.presenter, {super.key});
 
   @override
-  State<PokemonListPage> createState() => _PokemonListPageState();
-}
-
-class _PokemonListPageState extends State<PokemonListPage> {
-  final controller = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final controller = ScrollController();
+    late int tappedIndex;
 
     //When the user gets to the end of the page, loads more Pokémon
     controller.addListener(() {
       final maxScroll = controller.position.maxScrollExtent;
       final actualPosition = controller.position.pixels;
       if (maxScroll == actualPosition) {
-        widget.presenter.loadData();
+        presenter.loadData();
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    late int argsIndex;
-    late List<PokemonViewModel> argsViewModels;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +29,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
       ),
       body: Builder(
         builder: (context) {
-          widget.presenter.isLoadingStream.listen((isLoading) async {
+          presenter.isLoadingStream.listen((isLoading) async {
             if (isLoading) {
               await showLoading(context);
             } else {
@@ -49,16 +37,13 @@ class _PokemonListPageState extends State<PokemonListPage> {
             }
           });
 
-          widget.presenter.navigateToStream.listen((page) {
+          presenter.navigateToStream.listen((page) {
             if (page != null && page.isNotEmpty) {
               if (page == '/pokemon_details') {
                 Navigator.pushNamed(
                   context,
                   page,
-                  arguments: PokemonDetailsArguments(
-                    index: argsIndex,
-                    viewModels: argsViewModels,
-                  ),
+                  arguments: tappedIndex,
                 );
               } else {
                 Navigator.pushNamed(context, page);
@@ -66,29 +51,26 @@ class _PokemonListPageState extends State<PokemonListPage> {
             }
           });
 
-          widget.presenter.loadData();
+          presenter.loadData();
 
           return StreamBuilder<List<PokemonViewModel>>(
-            stream: widget.presenter.pokemonStream,
+            stream: presenter.pokemonStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<PokemonViewModel> viewModels = snapshot.data!;
-                argsViewModels = viewModels;
 
                 return PokemonList(
                   controller: controller,
                   viewModels: viewModels,
-                  presenter: widget.presenter,
-                  indexCallback: (index) => argsIndex = index,
+                  presenter: presenter,
+                  indexCallback: (index) => tappedIndex = index,
                 );
               }
 
               if (snapshot.hasError) {
                 return ErrorPage(
-                  error: snapshot.error,
-                  onTap: () => setState(() {
-                    widget.presenter.loadData();
-                  }),
+                  error: '${snapshot.error}',
+                  onTap: presenter.loadData,
                 );
               }
 

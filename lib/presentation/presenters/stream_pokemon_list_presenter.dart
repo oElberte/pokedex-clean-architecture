@@ -5,6 +5,7 @@ import '../../domain/usecases/usecases.dart';
 import '../../ui/components/components.dart';
 import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
+import '../global/global.dart';
 import '../helpers/helpers.dart';
 
 class StreamPokemonListPresenter implements PokemonListPresenter {
@@ -25,7 +26,7 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   @override
   Stream<String?> get navigateToStream => _navigateToController.stream;
 
-  List<PokemonViewModel> pokemonList = [];
+  final List<PokemonViewModel> pokemonList = Global.pokemonList;
 
   @override
   Future<void> loadData() async {

@@ -1,0 +1,1 @@
+export './global_variables.dart';

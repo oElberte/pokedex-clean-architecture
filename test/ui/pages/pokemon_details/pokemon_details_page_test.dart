@@ -72,18 +72,9 @@ void main() {
     Navigator.pushNamed(
       buildContext,
       '/fake_details',
-      arguments: PokemonDetailsArguments(
-        index: 0,
-        viewModels: makePokemons(),
-      ),
+      arguments: 0,
     );
 
     await mockNetworkImagesFor(() => tester.pumpAndSettle());
   }
-
-  testWidgets('Should show details received on arguments', (tester) async {
-    await (loadPageWithArguments(tester));
-
-    expect(find.text(viewModelList[0].name), findsOneWidget);
-  });
 }
