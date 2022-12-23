@@ -47,6 +47,16 @@ class _PokemonListPageState extends State<PokemonListPage> {
             }
           });
 
+          widget.presenter.navigateToStream.listen((page) {
+            if (page != null && page.isNotEmpty) {
+              if (page == '/pokemon_details') {
+                Navigator.pushNamed(context, page, /* arguments: , */);
+              } else {
+                Navigator.pushNamed(context, page);
+              }
+            }
+          });
+
           widget.presenter.loadData();
 
           return StreamBuilder<List<PokemonViewModel>>(

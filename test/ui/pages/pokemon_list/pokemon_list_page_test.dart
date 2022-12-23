@@ -18,6 +18,7 @@ void main() {
   late StreamController<List<PokemonViewModel>> pokemonController;
   late StreamController<bool> isLoadingController;
   late StreamController<String?> navigateToController;
+  late String currentRoute;
 
   void initStreams() {
     pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
@@ -95,6 +96,11 @@ void main() {
         '/': (context) {
           return PokemonListPage(presenter);
         },
+        '/any_route': (context) {
+          return const Scaffold(
+            body: Text('fake_page'),
+          );
+        },
       },
     );
     await mockNetworkImagesFor(() async {
@@ -152,7 +158,8 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(
+        presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
@@ -177,5 +184,14 @@ void main() {
     await mockNetworkImagesFor(() async => await tester.pump());
 
     verify(presenter.goToDetails()).called(1);
+  });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('/any_route');
+    await tester.pumpAndSettle();
+
+    expect(find.text('fake_page'), findsOneWidget);
   });
 }
