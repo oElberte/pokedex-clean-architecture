@@ -7,5 +7,6 @@ abstract class PokemonListPresenter {
 
   Future<void> loadData();
   void navigateTo(String page);
+  void goToDetails();
   void dispose();
 }

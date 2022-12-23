@@ -122,9 +122,15 @@ void main() {
   });
 
   test('Should go to page on click', () async {
-    expectLater(sut.navigateToStream, emitsInOrder(['/any_route', '/pokemon_details']));
+    expectLater(sut.navigateToStream, emitsInOrder(['/any_route', '/any_route']));
 
     sut.navigateTo('any_route');
-    sut.navigateTo('pokemon_details');
+    sut.navigateTo('any_route');
+  });
+
+  test('Should go to PokémonDetails on click', () async {
+    expectLater(sut.navigateToStream, emits('/pokemon_details'));
+
+    sut.goToDetails();
   });
 }

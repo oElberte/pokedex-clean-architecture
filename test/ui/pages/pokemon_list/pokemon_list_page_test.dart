@@ -17,10 +17,12 @@ void main() {
   late MockPokemonListPresenter presenter;
   late StreamController<List<PokemonViewModel>> pokemonController;
   late StreamController<bool> isLoadingController;
+  late StreamController<String?> navigateToController;
 
   void initStreams() {
     pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
     isLoadingController = StreamController<bool>.broadcast();
+    navigateToController = StreamController<String?>.broadcast();
   }
 
   void mockStreams() {
@@ -30,11 +32,15 @@ void main() {
     when(presenter.isLoadingStream).thenAnswer(
       (_) => isLoadingController.stream.distinct(),
     );
+    when(presenter.navigateToStream).thenAnswer(
+      (_) => navigateToController.stream.distinct(),
+    );
   }
 
   void closeStreams() {
     pokemonController.close();
     isLoadingController.close();
+    navigateToController.close();
   }
 
   List<PokemonViewModel> makePokemons() => const [
@@ -118,7 +124,7 @@ void main() {
 
   testWidgets('Should present error if LoadData fails', (tester) async {
     await loadPage(tester);
-    
+
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
 
@@ -146,8 +152,7 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(
-        presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());

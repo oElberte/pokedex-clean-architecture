@@ -64,6 +64,11 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   }
 
   @override
+  void goToDetails() {
+    _navigateToController.add('/pokemon_details');
+  }
+
+  @override
   void dispose() {
     _pokemonController.close();
     _isLoadingController.close();
