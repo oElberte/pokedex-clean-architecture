@@ -57,6 +57,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
                 return PokemonList(
                   controller: controller,
                   viewModels: viewModels,
+                  presenter: widget.presenter,
                 );
               }
 

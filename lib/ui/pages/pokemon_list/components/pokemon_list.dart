@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
-import 'pokemon_list_item.dart';
+import '../pokemon_list_presenter.dart';
+import './pokemon_list_item.dart';
 
 class PokemonList extends StatelessWidget {
   final ScrollController controller;
   final List<PokemonViewModel> viewModels;
+  final PokemonListPresenter presenter;
 
   const PokemonList({
     Key? key,
     required this.controller,
     required this.viewModels,
+    required this.presenter,
   }) : super(key: key);
 
   @override
@@ -29,7 +32,10 @@ class PokemonList extends StatelessWidget {
       ),
       itemCount: viewModels.length,
       itemBuilder: (context, index) {
-        return PokemonListItem(viewModel: viewModels[index]);
+        return InkWell(
+          onTap: presenter.goToDetails,
+          child: PokemonListItem(viewModel: viewModels[index]),
+        );
       },
     );
   }

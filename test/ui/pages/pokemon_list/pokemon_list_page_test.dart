@@ -166,4 +166,16 @@ void main() {
 
     verify(presenter.loadData()).called(3);
   });
+
+  testWidgets('Should call navigateTo on pokémon click', (tester) async {
+    await loadPage(tester);
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    await tester.tap(find.text('Bulbasaur'));
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    verify(presenter.goToDetails()).called(1);
+  });
 }

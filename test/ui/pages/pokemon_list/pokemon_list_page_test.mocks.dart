@@ -42,6 +42,11 @@ class MockPokemonListPresenter extends _i1.Mock
         returnValue: _i3.Stream<bool>.empty(),
       ) as _i3.Stream<bool>);
   @override
+  _i3.Stream<String?> get navigateToStream => (super.noSuchMethod(
+        Invocation.getter(#navigateToStream),
+        returnValue: _i3.Stream<String?>.empty(),
+      ) as _i3.Stream<String?>);
+  @override
   _i3.Future<void> loadData() => (super.noSuchMethod(
         Invocation.method(
           #loadData,
@@ -50,6 +55,22 @@ class MockPokemonListPresenter extends _i1.Mock
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+  @override
+  void navigateTo(String? page) => super.noSuchMethod(
+        Invocation.method(
+          #navigateTo,
+          [page],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void goToDetails() => super.noSuchMethod(
+        Invocation.method(
+          #goToDetails,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
   @override
   void dispose() => super.noSuchMethod(
         Invocation.method(
