@@ -20,9 +20,9 @@ class App extends StatelessWidget {
         '/': (context) {
           return makePokemonListPage();
         },
-        '/pokemon_details': (context) {
-          return const PokemonDetailsPage();
-        },
+        // '/pokemon_details': (context) {
+        //   return const PokemonDetailsPage();
+        // },
       },
     );
   }

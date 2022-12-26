@@ -1,13 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'package:pokedex/ui/components/components.dart';
 import 'package:pokedex/ui/pages/pages.dart';
 
+import 'pokemon_details_page_test.mocks.dart';
+
+@GenerateNiceMocks([MockSpec<PokemonDetailsPresenter>()])
 void main() {
   late BuildContext buildContext;
   late List<PokemonViewModel> viewModelList;
+  late PokemonDetailsPresenter presenter;
+  late StreamController<List<PokemonViewModel>> pokemonController;
+  late StreamController<bool> isLoadingController;
+
+  void initStreams() {
+    pokemonController = StreamController<List<PokemonViewModel>>.broadcast();
+    isLoadingController = StreamController<bool>.broadcast();
+  }
+
+  void mockStreams() {
+    when(presenter.pokemonStream).thenAnswer(
+      (_) => pokemonController.stream,
+    );
+    when(presenter.isLoadingStream).thenAnswer(
+      (_) => isLoadingController.stream.distinct(),
+    );
+  }
+
+  void closeStreams() {
+    pokemonController.close();
+    isLoadingController.close();
+  }
 
   List<PokemonViewModel> makePokemons() => const [
         PokemonViewModel(
@@ -51,6 +80,9 @@ void main() {
 
   Future<void> loadPageWithArguments(WidgetTester tester) async {
     viewModelList = makePokemons();
+    presenter = MockPokemonDetailsPresenter();
+    initStreams();
+    mockStreams();
     final pokemonDetailsPage = MaterialApp(
       title: 'Pokédex',
       debugShowCheckedModeBanner: false,
@@ -61,7 +93,7 @@ void main() {
           return const Scaffold();
         },
         '/fake_details': (context) {
-          return const PokemonDetailsPage();
+          return PokemonDetailsPage(presenter);
         },
       },
     );
@@ -77,4 +109,15 @@ void main() {
 
     await mockNetworkImagesFor(() => tester.pumpAndSettle());
   }
+
+  tearDown(() => closeStreams());
+
+  testWidgets('Should init with correct state', (tester) async {
+    await (loadPageWithArguments(tester));
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() => tester.pumpAndSettle());
+
+    expect(find.text(viewModelList[0].name), findsNWidgets(2));
+  });
 }
