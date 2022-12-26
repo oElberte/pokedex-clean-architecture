@@ -12,27 +12,40 @@ class PokemonDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final index = ModalRoute.of(context)!.settings.arguments as int;
 
-     return StreamBuilder<List<PokemonViewModel>>(
-        stream: presenter.pokemonStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            String name = snapshot.data![index].name;
-
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(name),
-              ),
-              body: Column(
-                children: [
-                  Image.network('image'),
-                  Text(name),
-                ],
-              ),
-            );
+    return Builder(
+      builder: (context) {
+        presenter.isLoadingStream.listen((isLoading) async {
+          if (isLoading) {
+            await showLoading(context);
+          } else {
+            hideLoading(context);
           }
+        });
 
-          return const SizedBox();
-        },
-      );
+        return StreamBuilder<List<PokemonViewModel>>(
+          stream: presenter.pokemonStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<PokemonViewModel> viewModels = snapshot.data!;
+              String name = viewModels[index].name;
+
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(name),
+                ),
+                body: Column(
+                  children: [
+                    Image.network(viewModels[index].imageUrl),
+                    Text(name),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox();
+          },
+        );
+      },
+    );
   }
 }

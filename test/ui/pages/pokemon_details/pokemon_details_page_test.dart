@@ -113,11 +113,23 @@ void main() {
   tearDown(() => closeStreams());
 
   testWidgets('Should init with correct state', (tester) async {
-    await (loadPageWithArguments(tester));
+    await loadPageWithArguments(tester);
 
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() => tester.pumpAndSettle());
 
     expect(find.text(viewModelList[0].name), findsNWidgets(2));
+  });
+
+  testWidgets('Should handle loading correctly', (tester) async {
+    await loadPageWithArguments(tester);
+
+    isLoadingController.add(true);
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    isLoadingController.add(false);
+    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 }
