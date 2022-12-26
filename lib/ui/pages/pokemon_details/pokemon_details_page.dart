@@ -42,6 +42,13 @@ class PokemonDetailsPage extends StatelessWidget {
               );
             }
 
+            if (snapshot.hasError) {
+              return ErrorPage(
+                error: '${snapshot.error}',
+                onTap: presenter.loadData,
+              );
+            }
+
             return const SizedBox();
           },
         );

@@ -7,6 +7,7 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'package:pokedex/ui/components/components.dart';
+import 'package:pokedex/ui/helpers/helpers.dart';
 import 'package:pokedex/ui/pages/pages.dart';
 
 import 'pokemon_details_page_test.mocks.dart';
@@ -131,5 +132,16 @@ void main() {
     isLoadingController.add(false);
     await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Should present error if LoadData fails', (tester) async {
+    await loadPageWithArguments(tester);
+
+    pokemonController.addError(UIError.unexpected.description);
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    expect(find.text(UIError.unexpected.description), findsOneWidget);
+    expect(find.text('Refresh'), findsOneWidget);
+    expect(find.text('Bulbasaur'), findsNothing);
   });
 }

@@ -138,7 +138,7 @@ void main() {
     expect(find.text('Bulbasaur'), findsNothing);
   });
 
-  testWidgets('Should present list loadData succeeds', (tester) async {
+  testWidgets('Should present list if loadData succeeds', (tester) async {
     await loadPage(tester);
 
     pokemonController.add(makePokemons());
@@ -157,8 +157,7 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(
-        presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
@@ -170,7 +169,7 @@ void main() {
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pump());
 
-    verify(presenter.loadData()).called(3);
+    verify(presenter.loadData()).called(2);
   });
 
   testWidgets('Should call navigateTo on pokémon click', (tester) async {
