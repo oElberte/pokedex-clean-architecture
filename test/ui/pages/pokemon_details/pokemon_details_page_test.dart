@@ -144,4 +144,22 @@ void main() {
     expect(find.text('Refresh'), findsOneWidget);
     expect(find.text('Bulbasaur'), findsNothing);
   });
+
+  testWidgets('Should call LoadData on refresh button click', (tester) async {
+    await loadPageWithArguments(tester);
+
+    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+
+    pokemonController.addError(UIError.unexpected.description);
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    expectLater(presenter.pokemonStream, emits(makePokemons()));
+    await tester.tap(find.text('Refresh'));
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    verify(presenter.loadData()).called(1);
+  });
 }
