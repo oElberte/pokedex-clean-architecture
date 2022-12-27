@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/components.dart';
@@ -10,7 +11,7 @@ class PokemonDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = ModalRoute.of(context)!.settings.arguments as int;
+    var globalIndex = ModalRoute.of(context)!.settings.arguments as int;
 
     return Builder(
       builder: (context) {
@@ -27,17 +28,32 @@ class PokemonDetailsPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<PokemonViewModel> viewModels = snapshot.data!;
-              String name = viewModels[index].name;
+              String name = viewModels[globalIndex].name;
 
               return Scaffold(
                 appBar: AppBar(
                   title: Text(name),
                 ),
-                body: Column(
-                  children: [
-                    Image.network(viewModels[index].imageUrl),
-                    Text(name),
-                  ],
+                body: CarouselSlider.builder(
+                  options: CarouselOptions(
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, reason) {
+                      globalIndex = index;
+                    },
+                  ),
+                  itemCount: viewModels.length,
+                  itemBuilder: (context, index, realIndex) {
+                    if (viewModels.length == (realIndex + 1)) {
+                      presenter.loadData();
+                    }
+
+                    return Column(
+                      children: [
+                        Image.network(viewModels[index].imageUrl),
+                        Text(viewModels[index].height),
+                      ],
+                    );
+                  },
                 ),
               );
             }

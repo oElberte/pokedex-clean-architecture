@@ -105,7 +105,7 @@ void main() {
     Navigator.pushNamed(
       buildContext,
       '/fake_details',
-      arguments: 0,
+      arguments: 1,
     );
 
     await mockNetworkImagesFor(() => tester.pumpAndSettle());
@@ -119,7 +119,7 @@ void main() {
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() => tester.pumpAndSettle());
 
-    expect(find.text(viewModelList[0].name), findsNWidgets(2));
+    expect(find.text(viewModelList[1].name), findsNWidgets(1));
   });
 
   testWidgets('Should handle loading correctly', (tester) async {
@@ -156,6 +156,15 @@ void main() {
     expectLater(presenter.pokemonStream, emits(makePokemons()));
     await tester.tap(find.text('Refresh'));
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    verify(presenter.loadData()).called(2);
+  });
+
+  testWidgets('Should call LoadData last index on carousel', (tester) async {
+    await loadPageWithArguments(tester);
 
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());

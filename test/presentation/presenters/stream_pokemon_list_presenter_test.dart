@@ -87,6 +87,7 @@ void main() {
     verify(loadPokemon.fetch(any)).called(50);
   });
 
+  //This test needs to be runned twice to pass, because of a bug
   test('Should emit correct events on success', () async {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     expectLater(sut.pokemonStream, emits(List.generate(50, (_) => makePokemonViewModel())));
