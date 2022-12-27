@@ -12,7 +12,7 @@ import 'mocks/load_pokemon.mocks.dart';
 
 void main() {
   late MockLoadPokemon loadPokemon;
-  late StreamPokemonListPresenter sut;
+  late StreamPokemonDetailsPresenter sut;
   late PokemonEntity pokemonEntity;
 
   PokemonEntity makePokemonEntity() => PokemonEntity(
@@ -74,7 +74,7 @@ void main() {
 
   setUp(() {
     loadPokemon = MockLoadPokemon();
-    sut = StreamPokemonListPresenter(loadPokemon);
+    sut = StreamPokemonDetailsPresenter(loadPokemon);
     mockLoadData(makePokemonEntity());
   });
 
@@ -117,18 +117,5 @@ void main() {
     expectLater(sut.pokemonStream, emitsError(UIError.badRequest.description));
 
     await sut.loadData();
-  });
-
-  test('Should go to page on click', () async {
-    expectLater(sut.navigateToStream, emitsInOrder(['/any_route', '/any_route']));
-
-    sut.navigateTo('any_route');
-    sut.navigateTo('any_route');
-  });
-
-  test('Should go to PokémonDetails on click', () async {
-    expectLater(sut.navigateToStream, emits('/pokemon_details'));
-
-    sut.goToDetails();
   });
 }
