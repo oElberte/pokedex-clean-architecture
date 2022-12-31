@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -10,13 +9,12 @@ import 'package:pokedex/ui/components/components.dart';
 import 'package:pokedex/ui/helpers/helpers.dart';
 import 'package:pokedex/ui/pages/pages.dart';
 
-import 'pokemon_details_page_test.mocks.dart';
+import '../mocks/pokemon_list_presenter.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<PokemonDetailsPresenter>()])
 void main() {
   late BuildContext buildContext;
   late List<PokemonViewModel> viewModelList;
-  late PokemonDetailsPresenter presenter;
+  late MockPokemonListPresenter listPresenter;
   late StreamController<List<PokemonViewModel>> pokemonController;
   late StreamController<bool> isLoadingController;
 
@@ -26,10 +24,10 @@ void main() {
   }
 
   void mockStreams() {
-    when(presenter.pokemonStream).thenAnswer(
+    when(listPresenter.pokemonStream).thenAnswer(
       (_) => pokemonController.stream,
     );
-    when(presenter.isLoadingStream).thenAnswer(
+    when(listPresenter.isLoadingStream).thenAnswer(
       (_) => isLoadingController.stream.distinct(),
     );
   }
@@ -81,21 +79,29 @@ void main() {
 
   Future<void> loadPageWithArguments(WidgetTester tester) async {
     viewModelList = makePokemons();
-    presenter = MockPokemonDetailsPresenter();
+    listPresenter = MockPokemonListPresenter();
     initStreams();
     mockStreams();
     final pokemonDetailsPage = MaterialApp(
       title: 'Pokédex',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: {
-        '/': (context) {
-          buildContext = context;
-          return const Scaffold();
-        },
-        '/fake_details': (context) {
-          return PokemonDetailsPage(presenter);
-        },
+      onGenerateRoute: (settings) {
+        var routes = {
+          "/": (context) {
+            buildContext = context;
+            return const Scaffold();
+          },
+          "/fake_details": (context) {
+            return PokemonDetailsPage(
+              settings.arguments as PokemonDetailsArguments,
+            );
+          }
+        };
+        WidgetBuilder builder = routes[settings.name]!;
+        return MaterialPageRoute(
+          builder: (context) => builder(context),
+        );
       },
     );
     await mockNetworkImagesFor(() async {
@@ -105,10 +111,14 @@ void main() {
     Navigator.pushNamed(
       buildContext,
       '/fake_details',
-      arguments: 1,
+      arguments: PokemonDetailsArguments(
+        listPresenter: listPresenter,
+        viewModels: viewModelList,
+        tappedIndex: 1,
+      ),
     );
 
-    await mockNetworkImagesFor(() => tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
   }
 
   tearDown(() => closeStreams());
@@ -117,58 +127,49 @@ void main() {
     await loadPageWithArguments(tester);
 
     pokemonController.add(makePokemons());
-    await mockNetworkImagesFor(() => tester.pumpAndSettle());
+    await mockNetworkImagesFor(() => tester.pump());
 
-    expect(find.text(viewModelList[1].name), findsNWidgets(1));
-  });
-
-  testWidgets('Should handle loading correctly', (tester) async {
-    await loadPageWithArguments(tester);
-
-    isLoadingController.add(true);
-    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-    isLoadingController.add(false);
-    await mockNetworkImagesFor(() async => await tester.pump(Duration.zero));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text(viewModelList[1].name), findsNWidgets(2));
   });
 
   testWidgets('Should present error if LoadData fails', (tester) async {
     await loadPageWithArguments(tester);
 
     pokemonController.addError(UIError.unexpected.description);
-    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
-    expect(find.text('Bulbasaur'), findsNothing);
+    expect(find.text(viewModelList[1].name), findsNWidgets(2));
   });
 
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPageWithArguments(tester);
 
-    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(listPresenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
-    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
 
-    expectLater(presenter.pokemonStream, emits(makePokemons()));
+    expectLater(listPresenter.pokemonStream, emits(makePokemons()));
     await tester.tap(find.text('Refresh'));
-    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
 
     pokemonController.add(makePokemons());
-    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
 
-    verify(presenter.loadData()).called(2);
+    verify(listPresenter.loadData()).called(2);
   });
 
   testWidgets('Should call LoadData last index on carousel', (tester) async {
     await loadPageWithArguments(tester);
 
+    //* Since the tappedIndex on Arguments is the last index, it updates
     pokemonController.add(makePokemons());
-    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+    await mockNetworkImagesFor(() async => await tester.pump());
 
-    verify(presenter.loadData()).called(1);
+    verify(listPresenter.loadData()).called(1);
   });
+
+  //* I don't have tests for Loading in this page, since the PokemonListPage handles showLoading.
 }

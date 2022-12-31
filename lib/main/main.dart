@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/pages/pages.dart';
-import 'factories/factories.dart';
+import './factories/factories.dart';
 
 void main() {
   runApp(const App());
@@ -16,13 +15,19 @@ class App extends StatelessWidget {
       title: 'Pokédex',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: {
-        '/': (context) {
-          return makePokemonListPage();
-        },
-        // '/pokemon_details': (context) {
-        //   return const PokemonDetailsPage();
-        // },
+      onGenerateRoute: (settings) {
+        var routes = {
+          "/": (context) {
+            return makePokemonListPage();
+          },
+          "/pokemon_details": (context) {
+            return makePokemonDetailsPage(settings.arguments);
+          }
+        };
+        WidgetBuilder builder = routes[settings.name]!;
+        return MaterialPageRoute(
+          builder: (context) => builder(context),
+        );
       },
     );
   }

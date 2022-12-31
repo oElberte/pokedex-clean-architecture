@@ -1,0 +1,1 @@
+export './pokemon_details_page_factory.dart';

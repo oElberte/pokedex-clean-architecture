@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:pokedex/ui/components/components.dart';
@@ -10,9 +9,8 @@ import 'package:pokedex/ui/helpers/helpers.dart';
 
 import 'package:pokedex/ui/pages/pages.dart';
 
-import 'pokemon_list_page_test.mocks.dart';
+import '../mocks/pokemon_list_presenter.mocks.dart';
 
-@GenerateMocks([PokemonListPresenter])
 void main() {
   late MockPokemonListPresenter presenter;
   late StreamController<List<PokemonViewModel>> pokemonController;
@@ -157,7 +155,8 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPage(tester);
 
-    expectLater(presenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(
+        presenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());

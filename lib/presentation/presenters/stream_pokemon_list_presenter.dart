@@ -5,7 +5,6 @@ import '../../domain/usecases/usecases.dart';
 import '../../ui/components/components.dart';
 import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
-import '../global/global.dart';
 import '../helpers/helpers.dart';
 
 class StreamPokemonListPresenter implements PokemonListPresenter {
@@ -17,6 +16,8 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   final _isLoadingController = StreamController<bool>.broadcast();
   final _navigateToController = StreamController<String?>.broadcast();
 
+  final List<PokemonViewModel> _pokemonList = [];
+
   @override
   Stream<List<PokemonViewModel>> get pokemonStream => _pokemonController.stream;
 
@@ -26,32 +27,30 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
   @override
   Stream<String?> get navigateToStream => _navigateToController.stream;
 
-  final List<PokemonViewModel> pokemonList = Global.pokemonList;
-
   @override
   Future<void> loadData() async {
     try {
       _isLoadingController.add(true);
-      var length = pokemonList.length;
+      var length = _pokemonList.length;
       for (int id = length + 1; id < length + 51; id++) {
         final pokemonEntity = await loadPokemon.fetch(id.toString());
         final pokemonViewModel = pokemonEntity.toViewModel();
-        pokemonList.add(pokemonViewModel);
+        _pokemonList.add(pokemonViewModel);
       }
-      _pokemonController.add(pokemonList);
+      _pokemonController.add(_pokemonList);
     } on DomainError catch (e) {
       switch (e) {
         case DomainError.invalidData:
           _pokemonController.addError(UIError.invalidData.description);
-          pokemonList.clear();
+          _pokemonList.clear();
           break;
         case DomainError.badRequest:
           _pokemonController.addError(UIError.badRequest.description);
-          pokemonList.clear();
+          _pokemonList.clear();
           break;
         default:
           _pokemonController.addError(UIError.unexpected.description);
-          pokemonList.clear();
+          _pokemonList.clear();
           break;
       }
     } finally {

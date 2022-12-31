@@ -13,6 +13,7 @@ class PokemonListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = ScrollController();
     late int tappedIndex;
+    late List<PokemonViewModel> viewModels;
 
     //When the user gets to the end of the page, loads more Pokémon
     controller.addListener(() {
@@ -43,7 +44,11 @@ class PokemonListPage extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   page,
-                  arguments: tappedIndex,
+                  arguments: PokemonDetailsArguments(
+                    viewModels: viewModels,
+                    tappedIndex: tappedIndex,
+                    listPresenter: presenter,
+                  ),
                 );
               } else {
                 Navigator.pushNamed(context, page);
@@ -57,7 +62,7 @@ class PokemonListPage extends StatelessWidget {
             stream: presenter.pokemonStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<PokemonViewModel> viewModels = snapshot.data!;
+                viewModels = snapshot.data!;
 
                 return PokemonList(
                   controller: controller,

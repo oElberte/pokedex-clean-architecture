@@ -87,7 +87,8 @@ void main() {
   //This test needs to be runned twice to pass, because of a bug
   test('Should emit correct events on success', () async {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    expectLater(sut.pokemonStream, emits(List.generate(50, (_) => makePokemonViewModel())));
+    expectLater(sut.pokemonStream,
+        emits(List.generate(50, (_) => makePokemonViewModel())));
 
     await sut.loadData();
   });
@@ -120,7 +121,8 @@ void main() {
   });
 
   test('Should go to page on click', () async {
-    expectLater(sut.navigateToStream, emitsInOrder(['/any_route', '/any_route']));
+    expectLater(
+        sut.navigateToStream, emitsInOrder(['/any_route', '/any_route']));
 
     sut.navigateTo('any_route');
     sut.navigateTo('any_route');
