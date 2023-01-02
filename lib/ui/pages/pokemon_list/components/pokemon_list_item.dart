@@ -16,7 +16,7 @@ class PokemonListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: getPokemonColor(viewModel.types[0]),
+        color: getTypeColor(viewModel.types[0]),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         boxShadow: const [
           BoxShadow(

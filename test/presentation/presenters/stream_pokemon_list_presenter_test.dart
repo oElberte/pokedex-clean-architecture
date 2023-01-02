@@ -41,16 +41,16 @@ void main() {
         id: pokemonEntity.id.toString().fixId(),
         name: pokemonEntity.name.toUpperCase().removeAdditional(),
         imageUrl: pokemonEntity.imageUrl,
-        height: pokemonEntity.height.toString(),
-        weight: pokemonEntity.weight.toString(),
+        height: '${pokemonEntity.height / 10} M',
+        weight: '${pokemonEntity.weight / 10} KG',
         stats: [
           StatViewModel(
             stat: pokemonEntity.stats[0].stat,
-            name: pokemonEntity.stats[0].name.toUpperCase(),
+            name: pokemonEntity.stats[0].name.fixStats(),
           ),
           StatViewModel(
             stat: pokemonEntity.stats[1].stat,
-            name: pokemonEntity.stats[1].name.toUpperCase(),
+            name: pokemonEntity.stats[1].name.fixStats(),
           ),
         ],
         types: [
@@ -87,8 +87,7 @@ void main() {
   //This test needs to be runned twice to pass, because of a bug
   test('Should emit correct events on success', () async {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    expectLater(sut.pokemonStream,
-        emits(List.generate(50, (_) => makePokemonViewModel())));
+    expectLater(sut.pokemonStream, emits(List.generate(50, (_) => makePokemonViewModel())));
 
     await sut.loadData();
   });

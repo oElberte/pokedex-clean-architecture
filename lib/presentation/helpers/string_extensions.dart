@@ -63,4 +63,22 @@ extension StringExtension on String {
       return '#$this';
     }
   }
+
+  String fixStats() {
+    if (toLowerCase().contains('hp')) {
+      return 'HP';
+    } else if (toLowerCase().contains('special-attack')) {
+      return 'SATK';
+    } else if (toLowerCase().contains('special-defense')) {
+      return 'SDEF';
+    } else if (toLowerCase().contains('attack')) {
+      return 'ATK';
+    } else if (toLowerCase().contains('defense')) {
+      return 'DEF';
+    } else if (toLowerCase().contains('speed')) {
+      return 'SPD';
+    } else {
+      return '';
+    }
+  }
 }

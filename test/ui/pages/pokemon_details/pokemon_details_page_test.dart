@@ -129,7 +129,7 @@ void main() {
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() => tester.pump());
 
-    expect(find.text(viewModelList[1].name), findsNWidgets(2));
+    expect(find.text(viewModelList[1].name), findsOneWidget);
   });
 
   testWidgets('Should present error if LoadData fails', (tester) async {
@@ -140,7 +140,7 @@ void main() {
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
-    expect(find.text(viewModelList[1].name), findsNWidgets(2));
+    expect(find.text(viewModelList[1].name), findsNothing);
   });
 
   testWidgets('Should call LoadData on refresh button click', (tester) async {

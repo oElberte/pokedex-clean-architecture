@@ -9,12 +9,12 @@ extension PokemonEntityExtensions on PokemonEntity {
       id: id.toString().fixId(),
       name: name.toUpperCase().removeAdditional(),
       imageUrl: imageUrl,
-      height: height.toString(),
-      weight: weight.toString(),
+      height: '${height / 10} M',
+      weight: '${weight / 10} KG',
       stats: stats
           .map((e) => StatViewModel(
                 stat: e.stat,
-                name: e.name.toUpperCase(),
+                name: e.name.fixStats(),
               ))
           .toList(),
       types: types.map((e) => e.toUpperCase()).toList(),

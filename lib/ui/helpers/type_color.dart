@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Color getPokemonColor(String type) {
+Color getTypeColor(String type) {
   switch (type.toLowerCase()) {
     case 'normal':
       return const Color.fromRGBO(168, 168, 120, 1);
