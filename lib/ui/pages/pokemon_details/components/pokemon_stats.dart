@@ -37,8 +37,7 @@ class PokemonStats extends StatelessWidget {
             children: onScreenPokemon.stats
                 .map(
                   (stat) => Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -63,8 +62,7 @@ class PokemonStats extends StatelessWidget {
                             builder: (context, value, _) => Stack(
                               children: [
                                 ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                                   child: LinearProgressIndicator(
                                     backgroundColor: Colors.grey,
                                     color: getStatColor(stat.name),

@@ -18,7 +18,7 @@ class PokemonMeasureItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          pokemon.height,
+          measure == 'Weight' ? pokemon.weight : pokemon.height,
           style: const TextStyle(
             fontSize: 20,
           ),
