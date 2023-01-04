@@ -5,13 +5,13 @@ Color getStatColor(String stat) {
     case 'hp':
       return const Color.fromARGB(255, 255, 35, 35);
     case 'atk':
-      return const Color.fromARGB(255, 255, 204, 62);
-    case 'def':
-      return const Color.fromARGB(255, 55, 142, 255);
-    case 'satk':
       return const Color.fromARGB(255, 255, 189, 8);
-    case 'sdef':
+    case 'def':
       return const Color.fromARGB(255, 8, 115, 255);
+    case 'satk':
+      return const Color.fromARGB(255, 255, 216, 110);
+    case 'sdef':
+      return const Color.fromARGB(255, 105, 170, 255);
     case 'spd':
       return const Color.fromARGB(255, 110, 110, 110);
     default:

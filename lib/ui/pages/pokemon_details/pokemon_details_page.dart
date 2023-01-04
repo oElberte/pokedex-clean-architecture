@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import '../pages.dart';
+import './components/components.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
   final PokemonDetailsArguments args;
@@ -61,140 +62,40 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
               if (snapshot.hasData) {
                 return Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              onScreenPokemon.height,
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            const Text('Height'),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              onScreenPokemon.weight,
-                              style: const TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            const Text('Weight'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Text('Base stats'),
-                    Column(
-                        children: onScreenPokemon.stats
-                            .map((e) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 50, vertical: 3),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(e.name),
-                                      SizedBox(
-                                        width: 250,
-                                        child: TweenAnimationBuilder<double>(
-                                          duration:
-                                              const Duration(milliseconds: 250),
-                                          curve: Curves.easeInOut,
-                                          tween: Tween<double>(
-                                            begin: 0,
-                                            end: e.stat / 255,
-                                          ),
-                                          builder: (context, value, _) => Stack(
-                                            children: [
-                                              LinearProgressIndicator(
-                                                backgroundColor: Colors.grey,
-                                                color: getStatColor(e.name),
-                                                minHeight: 20,
-                                                value: value,
-                                              ),
-                                              Align(
-                                                alignment: Alignment.lerp(
-                                                  Alignment.centerLeft,
-                                                  Alignment.centerRight,
-                                                  e.stat <= 15
-                                                      ? value - 0.04
-                                                      : value - 0.08,
-                                                )!,
-                                                child: Text(
-                                                  e.stat.toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ))
-                            .toList()),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: onScreenPokemon.types
-                          .map(
-                            (type) => Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: getTypeColor(type),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                              ),
-                              child: Text(
-                                type,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
+                    PokemonMeasures(onScreenPokemon),
+                    PokemonStats(onScreenPokemon),
+                    PokemonTypes(onScreenPokemon),
+
+                    //Pokémon Carousel
                     Stack(
                       alignment: AlignmentDirectional.center,
                       children: [
                         Container(
-                          height: height / 2.5,
+                          height: height / 2.3,
                           decoration: BoxDecoration(
+                            color: bgColor,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black38,
+                                blurRadius: 6,
+                                offset: Offset(0, -2)
+                              )
+                            ],
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(60),
                               topLeft: Radius.circular(60),
                             ),
-                            color: bgColor,
                           ),
                         ),
                         SizedBox(
-                          height: height / 2.5,
+                          height: height / 2.3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
+                                  //TODO: Implement scroll back to index on pop and onTap directly on next or previous Pokémon
                                   IconButton(
                                     onPressed: Navigator.of(context).pop,
                                     icon: const Icon(
@@ -228,8 +129,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                                   viewportFraction: 0.6,
                                   enlargeCenterPage: true,
                                   enlargeFactor: 0.7,
-                                  enlargeStrategy:
-                                      CenterPageEnlargeStrategy.zoom,
+                                  enlargeStrategy: CenterPageEnlargeStrategy.zoom,
                                   onPageChanged: (index, _) {
                                     if (snapshot.data!.length == (index + 1)) {
                                       listPresenter.loadData();
