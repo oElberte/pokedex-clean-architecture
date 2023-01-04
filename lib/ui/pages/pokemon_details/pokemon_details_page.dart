@@ -78,8 +78,8 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                               BoxShadow(
                                 color: Colors.black38,
                                 blurRadius: 6,
-                                offset: Offset(0, -2)
-                              )
+                                offset: Offset(0, -2),
+                              ),
                             ],
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(60),
