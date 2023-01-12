@@ -9,7 +9,7 @@ import 'package:pokedex/data/usecases/usecases.dart';
 import 'package:pokedex/domain/entities/entities.dart';
 import 'package:pokedex/domain/helpers/helpers.dart';
 
-import 'load_pokemon_impl_test.mocks.dart';
+import 'mocks/http_client.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<HttpClient>()])
 void main() {
