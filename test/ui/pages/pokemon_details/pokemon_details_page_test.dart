@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -13,7 +12,6 @@ import 'package:pokedex/ui/pages/pages.dart';
 import '../mocks/pokemon_details_presenter.mocks.dart';
 import '../mocks/pokemon_list_presenter.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<PokemonDetailsPresenter>()])
 void main() {
   late BuildContext buildContext;
   late List<PokemonViewModel> viewModelList;
@@ -81,12 +79,16 @@ void main() {
         ),
       ];
 
-  Future<void> loadPageWithArguments(WidgetTester tester) async {
+  void mockIcon() => when(detailsPresenter.getIcon(any))
+      .thenReturn(const Icon(Icons.favorite_border));
+
+  Future<void> loadPageWithArguments(WidgetTester tester, {required int tappedIndex}) async {
     viewModelList = makePokemons();
     listPresenter = MockPokemonListPresenter();
     detailsPresenter = MockPokemonDetailsPresenter();
     initStreams();
     mockStreams();
+    mockIcon();
     final pokemonDetailsPage = MaterialApp(
       title: 'Pokédex',
       debugShowCheckedModeBanner: false,
@@ -120,7 +122,7 @@ void main() {
       arguments: PokemonDetailsArguments(
         listPresenter: listPresenter,
         viewModels: viewModelList,
-        tappedIndex: 1,
+        tappedIndex: tappedIndex,
       ),
     );
 
@@ -130,30 +132,29 @@ void main() {
   tearDown(() => closeStreams());
 
   testWidgets('Should init with correct state', (tester) async {
-    await loadPageWithArguments(tester);
+    await loadPageWithArguments(tester, tappedIndex: 0);
 
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() => tester.pump());
 
-    expect(find.text(viewModelList[1].name), findsOneWidget);
+    expect(find.text(viewModelList[0].name), findsOneWidget);
   });
 
   testWidgets('Should present error if LoadData fails', (tester) async {
-    await loadPageWithArguments(tester);
+    await loadPageWithArguments(tester, tappedIndex: 0);
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
     expect(find.text('Refresh'), findsOneWidget);
-    expect(find.text(viewModelList[1].name), findsNothing);
+    expect(find.text(viewModelList[0].name), findsNothing);
   });
 
   testWidgets('Should call LoadData on refresh button click', (tester) async {
-    await loadPageWithArguments(tester);
+    await loadPageWithArguments(tester, tappedIndex: 0);
 
-    expectLater(listPresenter.pokemonStream,
-        emitsError(UIError.unexpected.description));
+    expectLater(listPresenter.pokemonStream, emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());
@@ -165,17 +166,29 @@ void main() {
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pump());
 
-    verify(listPresenter.loadData()).called(2);
+    verify(listPresenter.loadData()).called(1);
   });
 
   testWidgets('Should call LoadData last index on carousel', (tester) async {
-    await loadPageWithArguments(tester);
+    await loadPageWithArguments(tester, tappedIndex: 1);
 
     //* Since the tappedIndex on Arguments is the last index, it updates
     pokemonController.add(makePokemons());
     await mockNetworkImagesFor(() async => await tester.pump());
 
     verify(listPresenter.loadData()).called(1);
+  });
+
+  testWidgets('Should call onFavoritePress on favorite button pressed', (tester) async {
+    await loadPageWithArguments(tester, tappedIndex: 0);
+
+    pokemonController.add(makePokemons());
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    await tester.tap(find.byIcon(Icons.favorite_border));
+    await mockNetworkImagesFor(() async => await tester.pump());
+
+    verify(detailsPresenter.onFavoritePress(any)).called(1);
   });
 
   //* I don't have tests for Loading in this page, since the PokemonListPage handles showLoading.

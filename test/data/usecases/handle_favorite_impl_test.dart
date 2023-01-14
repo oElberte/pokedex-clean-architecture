@@ -12,7 +12,7 @@ void main() {
   setUp(() async {
     await Hive.initFlutter();
     index = faker.randomGenerator.integer(10);
-    box = await Hive.openBox('favorites');
+    box = await Hive.openBox<int>('favorites');
     sut = HandleFavoriteImpl(Hive);
   });
 
@@ -39,7 +39,13 @@ void main() {
   test('Shoud return the non favorite icon', () {
     final icon = sut.getIcon(index);
 
-    expect(icon.toString(), const Icon(Icons.favorite_border).toString());
+    expect(
+        icon.toString(),
+        const Icon(
+          Icons.favorite_border,
+          color: Colors.white,
+          size: 34,
+        ).toString());
   });
 
   test('Shoud return the favorite icon', () {
@@ -47,6 +53,12 @@ void main() {
 
     final icon = sut.getIcon(index);
 
-    expect(icon.toString(), const Icon(Icons.favorite).toString());
+    expect(
+        icon.toString(),
+        const Icon(
+          Icons.favorite,
+          color: Colors.white,
+          size: 34,
+        ).toString());
   });
 }

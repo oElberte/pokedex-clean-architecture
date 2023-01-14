@@ -12,7 +12,7 @@ class HandleFavoriteImpl implements HandleFavorite {
 
   @override
   void addFavorite(int index) {
-    final box = hive.box(favoritesBox);
+    final box = hive.box<int>(favoritesBox);
 
     if (box.containsKey(index)) {
       box.delete(index);
@@ -23,12 +23,12 @@ class HandleFavoriteImpl implements HandleFavorite {
 
   @override
   Widget getIcon(int index) {
-    final box = hive.box(favoritesBox);
+    final box = hive.box<int>(favoritesBox);
 
     if (box.containsKey(index)) {
-      return const Icon(Icons.favorite);
+      return const Icon(Icons.favorite, color: Colors.white, size: 34);
     } else {
-      return const Icon(Icons.favorite_border);
+      return const Icon(Icons.favorite_border, color: Colors.white, size: 34);
     }
   }
 }

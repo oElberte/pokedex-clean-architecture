@@ -25,6 +25,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   late int actualIndex;
   late List<PokemonViewModel> viewModels;
   late PokemonListPresenter listPresenter;
+  late PokemonDetailsPresenter detailsPresenter;
   late PokemonViewModel onScreenPokemon;
 
   @override
@@ -32,6 +33,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     actualIndex = widget.args.tappedIndex;
     viewModels = widget.args.viewModels;
     listPresenter = widget.args.listPresenter;
+    detailsPresenter = widget.detailsPresenter;
     onScreenPokemon = viewModels[actualIndex];
     bgColor = getTypeColor(onScreenPokemon.types[0]);
 
@@ -118,12 +120,12 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.white,
-                                      size: 34,
-                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        detailsPresenter.onFavoritePress(actualIndex);
+                                      });
+                                    },
+                                    icon: detailsPresenter.getIcon(actualIndex),
                                   ),
                                 ],
                               ),
@@ -135,7 +137,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                                   enlargeCenterPage: true,
                                   enlargeFactor: 0.7,
                                   enlargeStrategy: CenterPageEnlargeStrategy.zoom,
-                                  onPageChanged: (index, _) {
+                                  onPageChanged: (index, reason) {
                                     if (snapshot.data!.length == (index + 1)) {
                                       listPresenter.loadData();
                                     }
