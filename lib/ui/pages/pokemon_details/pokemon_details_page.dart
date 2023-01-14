@@ -17,20 +17,20 @@ class PokemonDetailsPage extends StatefulWidget {
 
 class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   late Color bgColor;
-  late int tappedIndex;
+  late int actualIndex;
   late List<PokemonViewModel> viewModels;
   late PokemonListPresenter listPresenter;
   late PokemonViewModel onScreenPokemon;
 
   @override
   void initState() {
-    tappedIndex = widget.args.tappedIndex;
+    actualIndex = widget.args.tappedIndex;
     viewModels = widget.args.viewModels;
     listPresenter = widget.args.listPresenter;
-    onScreenPokemon = viewModels[tappedIndex];
+    onScreenPokemon = viewModels[actualIndex];
     bgColor = getTypeColor(onScreenPokemon.types[0]);
 
-    if ((tappedIndex + 1) == viewModels.length) {
+    if ((actualIndex + 1) == viewModels.length) {
       listPresenter.loadData();
     }
     super.initState();
@@ -124,7 +124,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                               ),
                               CarouselSlider.builder(
                                 options: CarouselOptions(
-                                  initialPage: tappedIndex,
+                                  initialPage: actualIndex,
                                   enableInfiniteScroll: false,
                                   viewportFraction: 0.6,
                                   enlargeCenterPage: true,
@@ -134,7 +134,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                                     if (snapshot.data!.length == (index + 1)) {
                                       listPresenter.loadData();
                                     }
-                                    updatePokemon(snapshot.data![index]);
+                                    updatePokemon(snapshot.data![index], index);
                                   },
                                 ),
                                 itemCount: snapshot.data!.length,
@@ -161,8 +161,9 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     );
   }
 
-  void updatePokemon(PokemonViewModel viewModel) {
+  void updatePokemon(PokemonViewModel viewModel, int index) {
     setState(() {
+      actualIndex = index;
       onScreenPokemon = viewModel;
       bgColor = getTypeColor(viewModel.types[0]);
     });

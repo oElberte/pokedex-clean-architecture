@@ -1,2 +1,2 @@
-export './load_pokemon.dart';
 export './handle_favorite.dart';
+export './load_pokemon.dart';

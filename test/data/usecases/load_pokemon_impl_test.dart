@@ -1,6 +1,5 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:pokedex/data/http/http.dart';
@@ -11,7 +10,6 @@ import 'package:pokedex/domain/helpers/helpers.dart';
 
 import 'mocks/http_client.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<HttpClient>()])
 void main() {
   late String url;
   late MockHttpClient httpClient;

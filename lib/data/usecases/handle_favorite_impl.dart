@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:pokedex/domain/usecases/usecases.dart';
+
+import '../../domain/usecases/usecases.dart';
 
 class HandleFavoriteImpl implements HandleFavorite {
   final HiveInterface hive;
@@ -10,7 +11,7 @@ class HandleFavoriteImpl implements HandleFavorite {
   static const favoritesBox = 'favorites';
 
   @override
-  void onFavoritePress(int index) {
+  void addFavorite(int index) {
     final box = hive.box(favoritesBox);
 
     if (box.containsKey(index)) {

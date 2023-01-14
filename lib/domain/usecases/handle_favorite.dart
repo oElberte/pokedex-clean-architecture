@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
 abstract class HandleFavorite {
-  void onFavoritePress(int index);
+  void addFavorite(int index);
   Widget getIcon(int index);
 }

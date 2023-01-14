@@ -23,7 +23,7 @@ void main() {
   });
 
   test('Shoud put the index in the box', () {
-    sut.onFavoritePress(index);
+    sut.addFavorite(index);
 
     expect(box.keys, [index]);
   });
@@ -31,7 +31,7 @@ void main() {
   test('Shoud delete if the value already exists', () {
     box.put(index, index);
 
-    sut.onFavoritePress(index);
+    sut.addFavorite(index);
 
     expect(box.keys, []);
   });
