@@ -7,9 +7,14 @@ import '../pages.dart';
 import './components/components.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
+  final PokemonDetailsPresenter detailsPresenter;
   final PokemonDetailsArguments args;
 
-  const PokemonDetailsPage(this.args, {super.key});
+  const PokemonDetailsPage({
+    required this.detailsPresenter,
+    required this.args,
+    super.key,
+  });
 
   @override
   State<PokemonDetailsPage> createState() => _PokemonDetailsPageState();

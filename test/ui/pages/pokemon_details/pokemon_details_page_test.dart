@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -9,12 +10,15 @@ import 'package:pokedex/ui/components/components.dart';
 import 'package:pokedex/ui/helpers/helpers.dart';
 import 'package:pokedex/ui/pages/pages.dart';
 
+import '../mocks/pokemon_details_presenter.mocks.dart';
 import '../mocks/pokemon_list_presenter.mocks.dart';
 
+@GenerateNiceMocks([MockSpec<PokemonDetailsPresenter>()])
 void main() {
   late BuildContext buildContext;
   late List<PokemonViewModel> viewModelList;
   late MockPokemonListPresenter listPresenter;
+  late MockPokemonDetailsPresenter detailsPresenter;
   late StreamController<List<PokemonViewModel>> pokemonController;
   late StreamController<bool> isLoadingController;
 
@@ -80,6 +84,7 @@ void main() {
   Future<void> loadPageWithArguments(WidgetTester tester) async {
     viewModelList = makePokemons();
     listPresenter = MockPokemonListPresenter();
+    detailsPresenter = MockPokemonDetailsPresenter();
     initStreams();
     mockStreams();
     final pokemonDetailsPage = MaterialApp(
@@ -94,7 +99,8 @@ void main() {
           },
           "/fake_details": (context) {
             return PokemonDetailsPage(
-              settings.arguments as PokemonDetailsArguments,
+              detailsPresenter: detailsPresenter,
+              args: settings.arguments as PokemonDetailsArguments,
             );
           }
         };
@@ -146,7 +152,8 @@ void main() {
   testWidgets('Should call LoadData on refresh button click', (tester) async {
     await loadPageWithArguments(tester);
 
-    expectLater(listPresenter.pokemonStream, emitsError(UIError.unexpected.description));
+    expectLater(listPresenter.pokemonStream,
+        emitsError(UIError.unexpected.description));
 
     pokemonController.addError(UIError.unexpected.description);
     await mockNetworkImagesFor(() async => await tester.pump());

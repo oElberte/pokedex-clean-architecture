@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../ui/pages/pages.dart';
+import '../../factories.dart';
 
 Widget makePokemonDetailsPage(Object? args) {
-  return PokemonDetailsPage(args as PokemonDetailsArguments);
+  return PokemonDetailsPage(
+    detailsPresenter: makePokemonDetailsPresenter(),
+    args: args as PokemonDetailsArguments,
+  );
 }
