@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/ui/helpers/helpers.dart';
 
 import '../../components/components.dart';
 import '../pages.dart';
@@ -26,7 +27,7 @@ class PokemonListPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pokédex'),
+        title: Text(R.string.appTitle),
       ),
       body: Builder(
         builder: (context) {

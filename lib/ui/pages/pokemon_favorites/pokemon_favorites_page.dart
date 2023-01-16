@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/components.dart';
+import '../../helpers/helpers.dart';
 import '../pages.dart';
 import './components/components.dart';
 
@@ -18,7 +19,7 @@ class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pokédex'),
+        title: Text(R.string.favoriteTitle),
       ),
       body: FutureBuilder<List<PokemonViewModel>>(
         future: widget.presenter.loadFavorites(),
@@ -36,8 +37,7 @@ class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
 
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
-              return const Text(
-                  "It looks like you don't have any Pokémon favorites yet...");
+              return Text(R.string.favoriteListEmpty);
             } else {
               return PokemonList(
                 viewModels: snapshot.data!,

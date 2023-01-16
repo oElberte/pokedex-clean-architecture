@@ -165,6 +165,6 @@ void main() {
     when(presenter.loadFavorites()).thenAnswer((_) async => []);
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
-    expect(find.text("It looks like you don't have any Pokémon favorites yet..."), findsOneWidget);
+    expect(find.text(R.string.favoriteListEmpty), findsOneWidget);
   });
 }

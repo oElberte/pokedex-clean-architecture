@@ -1,3 +1,3 @@
-export './stat_color.dart';
-export './type_color.dart';
-export './ui_error.dart';
+export './colors/colors.dart';
+export './errors/errors.dart';
+export './i18n/i18n.dart';
