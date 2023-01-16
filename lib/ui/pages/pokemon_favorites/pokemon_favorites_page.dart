@@ -4,11 +4,16 @@ import '../../components/components.dart';
 import '../pages.dart';
 import './components/components.dart';
 
-class PokemonFavoritesPage extends StatelessWidget {
+class PokemonFavoritesPage extends StatefulWidget {
   final PokemonFavoritesPresenter presenter;
 
   const PokemonFavoritesPage(this.presenter, {super.key});
 
+  @override
+  State<PokemonFavoritesPage> createState() => _PokemonFavoritesPageState();
+}
+
+class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,17 +21,24 @@ class PokemonFavoritesPage extends StatelessWidget {
         title: const Text('Pokédex'),
       ),
       body: FutureBuilder<List<PokemonViewModel>>(
-        future: presenter.loadFavorites(),
+        future: widget.presenter.loadFavorites(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return PokemonList(
-              viewModels: snapshot.data!,
-              presenter: presenter,
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const LoadingIndicator();
+          }
+
+          if (snapshot.hasError) {
+            return ErrorPage(
+              error: '${snapshot.error}',
+              onTap: () => setState(() {}),
             );
           }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingIndicator();
+          if (snapshot.hasData) {
+            return PokemonList(
+              viewModels: snapshot.data!,
+              presenter: widget.presenter,
+            );
           }
 
           return const SizedBox();

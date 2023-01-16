@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import 'package:pokedex/ui/components/components.dart';
+import 'package:pokedex/ui/helpers/helpers.dart';
 import 'package:pokedex/ui/pages/pages.dart';
 
 import '../mocks/pokemon_favorites_presenter.mocks.dart';
@@ -56,7 +57,7 @@ void main() {
   Future<void> loadPageWithArguments(WidgetTester tester) async {
     viewModelList = makePokemons();
     presenter = MockPokemonFavoritesPresenter();
-    final pokemonDetailsPage = MaterialApp(
+    final pokemonFavoritesPage = MaterialApp(
       title: 'Pokédex',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
@@ -83,31 +84,27 @@ void main() {
     );
 
     await mockNetworkImagesFor(() async {
-      await tester.pumpWidget(pokemonDetailsPage);
+      await tester.pumpWidget(pokemonFavoritesPage);
     });
 
     Navigator.pushNamed(
       buildContext,
       '/fake_favorites',
-      arguments: PokemonDetailsArguments(
-        viewModels: viewModelList,
-        tappedIndex: 0,
-      ),
     );
-
-    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
-    await mockNetworkImagesFor(() async => await tester.pump());
   }
 
-  testWidgets('Should call loadData on page load', (tester) async {
+  testWidgets('Should call loadFavorites on page load', (tester) async {
     await loadPageWithArguments(tester);
+
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     verify(presenter.loadFavorites()).called(1);
   });
 
-  testWidgets('Should present list if loadData succeeds', (tester) async {
+  testWidgets('Should present list if loadFavorites succeeds', (tester) async {
     await loadPageWithArguments(tester);
 
+    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     expect(find.text('1'), findsOneWidget);
@@ -118,14 +115,41 @@ void main() {
     expect(find.text('Grass'), findsNWidgets(2));
   });
 
-  testWidgets('Should call navigateTo on pokémon click', (tester) async {
+  testWidgets('Should go to Details Page on pokémon click', (tester) async {
     await loadPageWithArguments(tester);
 
+    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     await tester.tap(find.text('Bulbasaur'));
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     expect(find.text('fake_details'), findsOneWidget);
+  });
+
+  testWidgets('Should present error if LoadFavorites fails', (tester) async {
+    await loadPageWithArguments(tester);
+
+    when(presenter.loadFavorites()).thenAnswer((_) async => Future.error(UIError.unexpected.description));
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    expect(find.text(UIError.unexpected.description), findsOneWidget);
+    expect(find.text('Refresh'), findsOneWidget);
+    expect(find.text(viewModelList[0].name), findsNothing);
+  });
+
+  testWidgets('Should call LoadFavorites on refresh button click', (tester) async {
+    await loadPageWithArguments(tester);
+
+    when(presenter.loadFavorites()).thenAnswer((_) async => Future.error(UIError.unexpected.description));
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    await tester.tap(find.text('Refresh'));
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    verify(presenter.loadFavorites()).called(2);
   });
 }
