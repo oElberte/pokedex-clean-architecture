@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../components/components.dart';
-import '../../../helpers/helpers.dart';
+import '../helpers/helpers.dart';
 import './pokemon_list_type_item.dart';
+import './pokemon_viewmodel.dart';
 
 class PokemonListItem extends StatelessWidget {
   final PokemonViewModel viewModel;

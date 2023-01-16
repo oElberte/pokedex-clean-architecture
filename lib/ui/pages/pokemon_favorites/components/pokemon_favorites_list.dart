@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/components.dart';
-import '../pokemon_list_presenter.dart';
+import '../../pages.dart';
 
 class PokemonList extends StatelessWidget {
-  final ScrollController controller;
   final List<PokemonViewModel> viewModels;
-  final PokemonListPresenter presenter;
-  final void Function(int) indexCallback;
+  final PokemonFavoritesPresenter presenter;
 
   const PokemonList({
     Key? key,
-    required this.controller,
     required this.viewModels,
     required this.presenter,
-    required this.indexCallback,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      controller: controller,
       padding: const EdgeInsets.symmetric(
         vertical: 10,
         horizontal: 10,
@@ -34,10 +29,14 @@ class PokemonList extends StatelessWidget {
       itemCount: viewModels.length,
       itemBuilder: (context, index) {
         return InkWell(
-          onTap: () {
-            indexCallback(index);
-            presenter.goToDetails();
-          },
+          onTap: () => Navigator.pushNamed(
+            context,
+            '/pokemon_details',
+            arguments: PokemonDetailsArguments(
+              viewModels: viewModels,
+              tappedIndex: index,
+            ),
+          ),
           child: PokemonListItem(viewModel: viewModels[index]),
         );
       },

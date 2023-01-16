@@ -23,7 +23,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   late Color bgColor;
   late int actualIndex;
   late List<PokemonViewModel> viewModels;
-  late PokemonListPresenter listPresenter;
+  late PokemonListPresenter? listPresenter;
   late PokemonDetailsPresenter detailsPresenter;
   late PokemonViewModel onScreenPokemon;
 
@@ -37,7 +37,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     bgColor = getTypeColor(onScreenPokemon.types[0]);
 
     if ((actualIndex + 1) == viewModels.length) {
-      listPresenter.loadData();
+      listPresenter?.loadData();
     }
     super.initState();
   }
@@ -56,12 +56,12 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
         children: [
           StreamBuilder<List<PokemonViewModel>>(
             initialData: viewModels,
-            stream: listPresenter.pokemonStream,
+            stream: listPresenter?.pokemonStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return ErrorPage(
                   error: '${snapshot.error}',
-                  onTap: listPresenter.loadData,
+                  onTap: listPresenter?.loadData ?? () {},
                 );
               }
 
@@ -85,7 +85,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                       },
                       onPageChanged: (index) {
                         if (snapshot.data!.length == (index + 1)) {
-                          listPresenter.loadData();
+                          listPresenter?.loadData();
                         }
                         updatePokemon(snapshot.data![index], index);
                       },
