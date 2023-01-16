@@ -158,4 +158,13 @@ void main() {
 
     verify(presenter.loadFavorites()).called(2);
   });
+
+  testWidgets('Should show message if Favorite List is empty', (tester) async {
+    await loadPageWithArguments(tester);
+
+    when(presenter.loadFavorites()).thenAnswer((_) async => []);
+    await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
+
+    expect(find.text("It looks like you don't have any Pokémon favorites yet..."), findsOneWidget);
+  });
 }

@@ -35,10 +35,15 @@ class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
           }
 
           if (snapshot.hasData) {
-            return PokemonList(
-              viewModels: snapshot.data!,
-              presenter: widget.presenter,
-            );
+            if (snapshot.data!.isEmpty) {
+              return const Text(
+                  "It looks like you don't have any Pokémon favorites yet...");
+            } else {
+              return PokemonList(
+                viewModels: snapshot.data!,
+                presenter: widget.presenter,
+              );
+            }
           }
 
           return const SizedBox();
