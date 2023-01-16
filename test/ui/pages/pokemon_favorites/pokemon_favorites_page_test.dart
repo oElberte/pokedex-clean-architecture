@@ -54,6 +54,12 @@ void main() {
         ),
       ];
 
+  void mockList() =>
+      when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
+
+  void mockError() => when(presenter.loadFavorites())
+      .thenAnswer((_) async => Future.error(UIError.unexpected.description));
+
   Future<void> loadPageWithArguments(WidgetTester tester) async {
     viewModelList = makePokemons();
     presenter = MockPokemonFavoritesPresenter();
@@ -104,7 +110,7 @@ void main() {
   testWidgets('Should present list if loadFavorites succeeds', (tester) async {
     await loadPageWithArguments(tester);
 
-    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
+    mockList();
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     expect(find.text('1'), findsOneWidget);
@@ -118,7 +124,7 @@ void main() {
   testWidgets('Should go to Details Page on pokémon click', (tester) async {
     await loadPageWithArguments(tester);
 
-    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
+    mockList();
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     await tester.tap(find.text('Bulbasaur'));
@@ -130,7 +136,7 @@ void main() {
   testWidgets('Should present error if LoadFavorites fails', (tester) async {
     await loadPageWithArguments(tester);
 
-    when(presenter.loadFavorites()).thenAnswer((_) async => Future.error(UIError.unexpected.description));
+    mockError();
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     expect(find.text(UIError.unexpected.description), findsOneWidget);
@@ -141,13 +147,13 @@ void main() {
   testWidgets('Should call LoadFavorites on refresh button click', (tester) async {
     await loadPageWithArguments(tester);
 
-    when(presenter.loadFavorites()).thenAnswer((_) async => Future.error(UIError.unexpected.description));
+    mockError();
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     await tester.tap(find.text('Refresh'));
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
-    when(presenter.loadFavorites()).thenAnswer((_) async => viewModelList);
+    mockList();
     await mockNetworkImagesFor(() async => await tester.pumpAndSettle());
 
     verify(presenter.loadFavorites()).called(2);
