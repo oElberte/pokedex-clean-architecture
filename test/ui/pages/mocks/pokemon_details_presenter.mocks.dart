@@ -67,4 +67,13 @@ class MockPokemonDetailsPresenter extends _i1.Mock
           ),
         ),
       ) as _i2.Widget);
+  @override
+  int getBoxIndex(int? index) => (super.noSuchMethod(
+        Invocation.method(
+          #getBoxIndex,
+          [index],
+        ),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
 }

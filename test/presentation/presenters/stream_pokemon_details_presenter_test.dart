@@ -31,4 +31,13 @@ void main() {
     verify(handleFavorite.getIcon(index)).called(1);
     expect(icon.toString(), const Icon(Icons.favorite_border).toString());
   });
+
+  test('Should call getIndex and return the correct index inside box', () async {
+    when(handleFavorite.getIndex(any)).thenReturn(16);
+
+    final boxIndex = sut.getBoxIndex(index);
+
+    verify(handleFavorite.getIndex(index)).called(1);
+    expect(boxIndex, 16);
+  });
 }

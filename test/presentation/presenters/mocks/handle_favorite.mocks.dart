@@ -65,4 +65,13 @@ class MockHandleFavorite extends _i1.Mock implements _i3.HandleFavorite {
           ),
         ),
       ) as _i2.Widget);
+  @override
+  int getIndex(int? index) => (super.noSuchMethod(
+        Invocation.method(
+          #getIndex,
+          [index],
+        ),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
 }
