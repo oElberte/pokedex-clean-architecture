@@ -61,4 +61,12 @@ void main() {
           size: 34,
         ).toString());
   });
+
+  test('Shoud return the correct index', () {
+    box.put(index, index);
+
+    final boxIndex = sut.getIndex(0);
+
+    expect(boxIndex, index);
+  });
 }
