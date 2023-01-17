@@ -3,11 +3,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import './factories/factories.dart';
 
-const favoritesBox = 'favorites';
-
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox<int>(favoritesBox);
+  await Hive.openBox<int>('favorites');
   runApp(const App());
 }
 
@@ -27,6 +25,9 @@ class App extends StatelessWidget {
           },
           "/pokemon_details": (context) {
             return makePokemonDetailsPage(settings.arguments);
+          },
+          "/pokemon_favorites": (context) {
+            return makePokemonFavoritesPage();
           }
         };
         WidgetBuilder builder = routes[settings.name]!;

@@ -20,6 +20,7 @@ class StreamPokemonFavoritesPresenter implements PokemonFavoritesPresenter {
 
   @override
   Future<List<PokemonViewModel>> loadFavorites() async {
+    _pokemonList.clear();
     try {
       for (int id in favoritesBox.keys) {
         final pokemonEntity = await loadPokemon.fetch('${id + 1}');
@@ -30,10 +31,13 @@ class StreamPokemonFavoritesPresenter implements PokemonFavoritesPresenter {
     } on DomainError catch (e) {
       switch (e) {
         case DomainError.invalidData:
+          _pokemonList.clear();
           return Future.error(UIError.invalidData.description);
         case DomainError.badRequest:
+          _pokemonList.clear();
           return Future.error(UIError.badRequest.description);
         default:
+          _pokemonList.clear();
           return Future.error(UIError.unexpected.description);
       }
     }

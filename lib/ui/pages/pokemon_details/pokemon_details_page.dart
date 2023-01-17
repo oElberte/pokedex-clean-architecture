@@ -23,9 +23,9 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   late Color bgColor;
   late int actualIndex;
   late List<PokemonViewModel> viewModels;
-  late PokemonListPresenter? listPresenter;
   late PokemonDetailsPresenter detailsPresenter;
   late PokemonViewModel onScreenPokemon;
+  PokemonListPresenter? listPresenter;
 
   @override
   void initState() {
@@ -42,11 +42,9 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     super.initState();
   }
 
-  /*  
-  I don't need to listen to the isLoadingStream from the 
+  /*  I don't need to listen to the isLoadingStream from the 
   listPresenter since is a showDialog, with the other page listening,
-  it applies the loading dialog to this one too           
-  */
+  it applies the loading dialog to this one too */
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -74,20 +72,17 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                     PokemonCarousel(
                       screenHeight: height,
                       bgColor: bgColor,
-                      actualIndex: actualIndex,
+                      initialPage: actualIndex,
+                      favoriteIndex: getCorrectIndex(),
                       onScreenPokemon: onScreenPokemon,
                       pokemonList: snapshot.data!,
                       detailsPresenter: detailsPresenter,
-                      onFavoritePress: () {
-                        setState(() {
-                          detailsPresenter.onFavoritePress(actualIndex);
-                        });
-                      },
+                      onFavoritePress: updateFavorite,
                       onPageChanged: (index) {
                         if (snapshot.data!.length == (index + 1)) {
                           listPresenter?.loadData();
                         }
-                        updatePokemon(snapshot.data![index], index);
+                        updatePokemon(snapshot.data!, index);
                       },
                     ),
                   ],
@@ -102,11 +97,38 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
     );
   }
 
-  void updatePokemon(PokemonViewModel viewModel, int index) {
+  int getCorrectIndex() {
+    if (listPresenter == null) {
+      return detailsPresenter.getBoxIndex(actualIndex);
+    } else {
+      return actualIndex;
+    }
+  }
+
+  void updateFavorite() {
+    detailsPresenter.onFavoritePress(getCorrectIndex());
+    /* The listPresenter is only received from the Pokémon List Page, 
+    so it is possible to check if the user is coming from
+    the Pokémon List Page or the Pokémon Favorites Page */
+    if (listPresenter == null) {
+      viewModels.removeAt(actualIndex);
+      if (viewModels.isEmpty) {
+        Navigator.of(context).pop();
+        return;
+      } else if (actualIndex == viewModels.length) {
+        updatePokemon(viewModels, actualIndex - 1);
+      } else {
+        updatePokemon(viewModels, actualIndex);
+      }
+    }
+    setState(() {});
+  }
+
+  void updatePokemon(List<PokemonViewModel> viewModel, int index) {
     setState(() {
       actualIndex = index;
-      onScreenPokemon = viewModel;
-      bgColor = getTypeColor(viewModel.types[0]);
+      onScreenPokemon = viewModel[index];
+      bgColor = getTypeColor(viewModel[index].types[0]);
     });
   }
 }

@@ -60,7 +60,7 @@ class StreamPokemonListPresenter implements PokemonListPresenter {
 
   @override
   void navigateTo(String page) {
-    _navigateToController.add('/$page');
+    _navigateToController.add(page);
   }
 
   @override

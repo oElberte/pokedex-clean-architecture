@@ -10,7 +10,8 @@ class PokemonCarousel extends StatelessWidget {
     Key? key,
     required this.screenHeight,
     required this.bgColor,
-    required this.actualIndex,
+    required this.initialPage,
+    required this.favoriteIndex,
     required this.onScreenPokemon,
     required this.pokemonList,
     required this.detailsPresenter,
@@ -20,7 +21,8 @@ class PokemonCarousel extends StatelessWidget {
 
   final double screenHeight;
   final Color bgColor;
-  final int actualIndex;
+  final int initialPage;
+  final int favoriteIndex;
   final PokemonViewModel onScreenPokemon;
   final List<PokemonViewModel> pokemonList;
   final PokemonDetailsPresenter detailsPresenter;
@@ -56,12 +58,12 @@ class PokemonCarousel extends StatelessWidget {
             children: [
               RowNameAndButtons(
                 name: onScreenPokemon.name,
-                icon: detailsPresenter.getIcon(actualIndex),
+                icon: detailsPresenter.getIcon(favoriteIndex),
                 onFavoritePress: onFavoritePress,
               ),
               CarouselSlider.builder(
                 options: CarouselOptions(
-                  initialPage: actualIndex,
+                  initialPage: initialPage,
                   enableInfiniteScroll: false,
                   viewportFraction: 0.6,
                   enlargeCenterPage: true,

@@ -17,4 +17,9 @@ class StreamPokemonDetailsPresenter implements PokemonDetailsPresenter {
   Widget getIcon(int index) {
     return handleFavorite.getIcon(index);
   }
+
+  @override
+  int getBoxIndex(int index) {
+    return handleFavorite.getIndex(index);
+  }
 }

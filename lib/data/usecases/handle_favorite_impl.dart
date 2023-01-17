@@ -31,4 +31,11 @@ class HandleFavoriteImpl implements HandleFavorite {
       return const Icon(Icons.favorite_border, color: Colors.white, size: 34);
     }
   }
+
+  @override
+  int getIndex(int index) {
+    final box = hive.box<int>(favoritesBox);
+
+    return box.getAt(index)!;
+  }
 }

@@ -25,7 +25,9 @@ class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
         future: widget.presenter.loadFavorites(),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return const LoadingIndicator();
+            return const Center(
+              child: LoadingIndicator(),
+            );
           }
 
           if (snapshot.hasError) {
@@ -37,11 +39,14 @@ class _PokemonFavoritesPageState extends State<PokemonFavoritesPage> {
 
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
-              return Text(R.string.favoriteListEmpty);
+              return Center(
+                child: Text(R.string.favoriteListEmpty),
+              );
             } else {
               return PokemonList(
                 viewModels: snapshot.data!,
                 presenter: widget.presenter,
+                onDetailsPop: () => setState(() {}),
               );
             }
           }

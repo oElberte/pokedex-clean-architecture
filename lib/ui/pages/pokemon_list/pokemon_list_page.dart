@@ -13,8 +13,8 @@ class PokemonListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = ScrollController();
-    late int tappedIndex;
     late List<PokemonViewModel> viewModels;
+    late int tappedIndex;
 
     //When the user gets to the end of the page, loads more Pokémon
     controller.addListener(() {
@@ -28,6 +28,12 @@ class PokemonListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(R.string.appTitle),
+        actions: [
+          IconButton(
+            onPressed: () => presenter.navigateTo('/pokemon_favorites'),
+            icon: const Icon(Icons.favorite),
+          ),
+        ],
       ),
       body: Builder(
         builder: (context) {

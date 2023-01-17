@@ -6,11 +6,13 @@ import '../../pages.dart';
 class PokemonList extends StatelessWidget {
   final List<PokemonViewModel> viewModels;
   final PokemonFavoritesPresenter presenter;
+  final void Function() onDetailsPop;
 
   const PokemonList({
     Key? key,
     required this.viewModels,
     required this.presenter,
+    required this.onDetailsPop,
   }) : super(key: key);
 
   @override
@@ -29,14 +31,17 @@ class PokemonList extends StatelessWidget {
       itemCount: viewModels.length,
       itemBuilder: (context, index) {
         return InkWell(
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/pokemon_details',
-            arguments: PokemonDetailsArguments(
-              viewModels: viewModels,
-              tappedIndex: index,
-            ),
-          ),
+          onTap: () async {
+            await Navigator.pushNamed(
+              context,
+              '/pokemon_details',
+              arguments: PokemonDetailsArguments(
+                viewModels: viewModels,
+                tappedIndex: index,
+              ),
+            );
+            onDetailsPop();
+          },
           child: PokemonListItem(viewModel: viewModels[index]),
         );
       },
